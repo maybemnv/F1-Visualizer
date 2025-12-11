@@ -1,0 +1,144 @@
+[project]
+version = "1.0.0"
+name = "f1_visualization"
+authors = [{ name = "Manav" }]
+description = "F1 Visualizer - Interactive dashboard for Formula 1 race data visualization since 2018"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastf1>=3.6.0",
+    "pandas>=2.0.0",
+    "matplotlib>=3.7.0",
+    "numpy>=2.0.0",
+    "seaborn>=0.13.0",
+    "tomli>=2.0.0",
+    "tomli-w>=1.0.0",
+    "pre-commit>=3.6.0",
+    "click>=8.0.0",
+    "dash>=3.0.0",
+    "dash-bootstrap-components>=2.0.0",
+]
+
+[project.optional-dependencies]
+performance = ["orjson >= 3.9.0"]
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["f1_visualization"]
+
+[tool.ruff]
+preview = true
+include = ["f1_visualization/*.py", "./*.py"]
+line-length = 96
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint]
+select = [
+    # eradicate
+    "ERA",
+    # flake8-annotations
+    "ANN",
+    # flake8-blind-except
+    "BLE",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-commas
+    "COM",
+    # flake8-comprehensions
+    "C4",
+    # flake8-datetimez
+    "DTZ",
+    # flake8-future-annotations
+    "FA",
+    # flake8-implicit-str-concat
+    "ISC",
+    # flake8-import-conventions
+    "ICN",
+    # flake8-logging
+    "LOG",
+    # flake8-logging-format
+    "G",
+    # flake8-pie
+    "PIE",
+    # flake8-print
+    "T20",
+    # flake8-quotes
+    "Q",
+    # flake8-raise
+    "RSE",
+    # flake8-return
+    "RET",
+    # flake8-self
+    "SLF",
+    # flake8-simplify
+    "SIM",
+    # flake8-unused-arguments
+    "ARG",
+    # flake8-use-pathlib
+    "PTH",
+    # flynt
+    "FLY",
+    # isort
+    "I",
+    # pandas-vet
+    "PD",
+    # Numpy
+    "NPY",
+    # pep8-naming
+    "N",
+    # Perflint
+    "PERF",
+    # pycodestyle errors
+    "E",
+    # pycodestyle warnings
+    "W",
+    # pydocstyle
+    "D1",
+    "D2",
+    "D3",
+    "D400",
+    "D401",
+    "D402",
+    "D403",
+    "D404",
+    # Pyflakes
+    "F",
+    # Pylint
+    "PL",
+    # pyupgrade
+    "UP",
+    # refurb
+    "FURB",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+
+ignore = [
+    "COM812",  # compliance with previous style
+    "ISC001",  # conflict with formatter
+    "PTH123",  # all open calls already uses Pathlib for file handling
+    "PD901",   # df is a perfectly fine variable name
+    "D203",    # conflict with preferred D211 (No blank lines allowed before class docstring)
+    "D212",    # conflict with preferred D213 (Multi-line docstring summary should start at the second line)
+    "PLR0912", # function too many branches
+    "PLR0913", # function too many arguments
+    "PLR0914", # function too many local variables
+    "PLR0915", # function too many statements
+    "PLR0917", # function too many positional arguments
+    "UP015",   # explicit is better than implicit
+    "UP038",   # deprecated
+    "FURB101", # Nothing wrong with using open and read
+    "FURB118", # this is not better
+    "TRY003",  # too nitpicky
+]

@@ -1,0 +1,16 @@
+# Ensures PR is not running Dash app in debug mode
+# and does not contain git conflict markers
+name: "Check clean PR"
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+jobs:
+  check_pr:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check PR
+      uses: JJ/github-pr-contains-action@releases/v14.1
+      with:
+        github-token: ${{github.token}}
+        diffDoesNotContain: "debug=True|<<<|>>>|==="
