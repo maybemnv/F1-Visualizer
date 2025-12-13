@@ -8,7 +8,7 @@ aws_login.sh
 
 # playground notebooks
 *.ipynb
-
+.docs/
 # subdirectories
 /Cache
 /Graphs

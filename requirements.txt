@@ -9,3 +9,6 @@ pre-commit >= 3.6.0
 click >= 8.0.0
 dash >= 3.0.0
 dash-bootstrap-components >= 2.0.0
+plotly >= 5.0.0
+pytest==9.0.2
+pytest-cov==7.0.0
