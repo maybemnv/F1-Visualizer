@@ -21,17 +21,36 @@ dependencies = [
 
 [project.optional-dependencies]
 performance = ["orjson >= 3.9.0"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "mypy>=1.0.0",
+    "pandas-stubs",
+    "types-seaborn",
+]
 
 [build-system]
 requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["f1_visualization"]
+packages = ["f1_visualization", "dashboard"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
 
 [tool.ruff]
 preview = true
-include = ["f1_visualization/*.py", "./*.py"]
+include = ["f1_visualization/**/*.py", "dashboard/**/*.py", "./*.py", "tests/**/*.py"]
 line-length = 96
 indent-width = 4
 

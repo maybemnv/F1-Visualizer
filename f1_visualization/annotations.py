@@ -3,11 +3,12 @@
 from typing import NamedTuple, TypeAlias
 
 import fastf1
-import matplotlib as mpl
+from matplotlib.axes import Axes as MplAxes
+from matplotlib.figure import Figure as MplFigure
 
 Session: TypeAlias = fastf1.core.Session
-Figure: TypeAlias = mpl.figure.Figure
-Axes: TypeAlias = mpl.axes.Axes
+Figure: TypeAlias = MplFigure
+Axes: TypeAlias = MplAxes
 
 
 class PlotArgs(NamedTuple):
