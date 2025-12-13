@@ -1,16 +1,12 @@
-"""Application configuration with environment variable support."""
+"""Application configuration - backward compatible with Pydantic settings."""
 
-import os
-from pathlib import Path
+# Re-export from new Pydantic-based settings
+from f1_visualization.schemas.settings import settings
 
-# Base paths
-ROOT_DIR = Path(__file__).absolute().parent
-DATA_DIR = Path(os.getenv("F1_DATA_DIR", str(ROOT_DIR / "Data")))
-CACHE_DIR = Path(os.getenv("F1_CACHE_DIR", str(DATA_DIR / "cache")))
-
-# Server configuration
-HOST = os.getenv("F1_HOST", "0.0.0.0")
-PORT = int(os.getenv("F1_PORT", "8000"))
-
-# Debug mode
-DEBUG = os.getenv("F1_DEBUG", "false").lower() == "true"
+# Backward-compatible exports
+ROOT_DIR = settings.data_dir.parent
+DATA_DIR = settings.data_dir
+CACHE_DIR = settings.cache_dir
+HOST = settings.host
+PORT = settings.port
+DEBUG = settings.debug

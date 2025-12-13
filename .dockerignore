@@ -1,0 +1,72 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+.eggs
+*.egg
+dist
+build
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# Virtual environments
+.venv
+venv
+env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Docs
+.docs
+*.md
+!README.md
+
+# Cache (we use volumes for this)
+.cache
+*.pkl
+*.parquet
+
+# Logs (we use volumes for this)
+logs
+*.log
+
+# Data (mounted separately)
+Data
+
+# Testing
+tests
+conftest.py
+
+# CI/CD
+.github
+.gitlab
+Jenkinsfile
+
+# Development
+Automation
+*.sh
+Makefile
+
+# Misc
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db

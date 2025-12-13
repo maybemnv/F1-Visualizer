@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  f1-visualizer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: f1-visualizer
+    ports:
+      - "8050:8050"
+    volumes:
+      # Persist F1 data between container restarts
+      - ./Data:/app/Data:ro
+      # Named volume for cache (managed by Docker)
+      - f1_cache:/app/.cache
+      # Logs volume
+      - f1_logs:/app/logs
+    environment:
+      - F1_HOST=0.0.0.0
+      - F1_PORT=8050
+      - F1_LOG_LEVEL=INFO
+      - F1_CACHE_ENABLED=true
+      - F1_CACHE_DISK_TTL_HOURS=24
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8050/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+
+  # Optional: Data preprocessing service (run once)
+  f1-preprocess:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: f1-preprocess
+    volumes:
+      - ./Data:/app/Data
+      - f1_cache:/app/.cache
+    command: ["python", "-m", "f1_visualization.preprocess"]
+    profiles:
+      - preprocess  # Only run with: docker compose --profile preprocess up f1-preprocess
+
+volumes:
+  f1_cache:
+    driver: local
+  f1_logs:
+    driver: local
+
+networks:
+  default:
+    name: f1-network
