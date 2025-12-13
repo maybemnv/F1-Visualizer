@@ -1,5 +1,6 @@
 """Tab components package."""
 
+from dashboard.components.tabs.analysis_tab import analysis_tab
 from dashboard.components.tabs.common import lap_numbers_slider, upper_bound_slider
 from dashboard.components.tabs.compound_tab import compound_plot_tab
 from dashboard.components.tabs.distplot_tab import distplot_tab
@@ -19,4 +20,6 @@ __all__ = [
     "distplot_tab",
     "compound_plot_tab",
     "legends_tab",
+    "analysis_tab",
 ]
+

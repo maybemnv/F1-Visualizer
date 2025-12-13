@@ -6,7 +6,7 @@ This module provides a centralized way to register all callbacks with the Dash a
 from dash import Dash
 
 # Import all callback modules to register them
-from dashboard.callbacks import data, drivers, plots, session, sliders
+from dashboard.callbacks import analysis, data, drivers, plots, session, sliders
 
 
 def register_callbacks(app: Dash) -> None:
@@ -30,3 +30,5 @@ def register_callbacks(app: Dash) -> None:
     _ = data
     _ = plots
     _ = sliders
+    _ = analysis
+

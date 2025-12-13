@@ -5,6 +5,7 @@ from dash import dcc, html
 
 from dashboard.components import add_gap_row, external_links, session_picker_row
 from dashboard.components.tabs import (
+    analysis_tab,
     compound_plot_tab,
     distplot_tab,
     legends_tab,
@@ -18,6 +19,8 @@ from dashboard.components.tabs import (
 # Re-export y_options for backward compatibility with callbacks
 __all__ = ["app_layout", "scatter_y_options", "line_y_options"]
 
+# Store for session data (used by analysis callbacks)
+session_data_store = dcc.Store(id="session-data", data={})
 
 app_layout = dbc.Container([
     html.H1("F1 Visualizer"),
@@ -27,6 +30,7 @@ app_layout = dbc.Container([
     dcc.Store(id="last-race-round"),
     dcc.Store(id="last-sprint-round"),
     dcc.Store(id="laps"),
+    session_data_store,
     html.Br(),
     dbc.Row(
         dcc.Loading(
@@ -49,6 +53,7 @@ app_layout = dbc.Container([
         lineplot_tab,
         distplot_tab,
         compound_plot_tab,
+        analysis_tab,
         legends_tab,
     ]),
     html.Br(),

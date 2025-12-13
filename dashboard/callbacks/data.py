@@ -137,3 +137,25 @@ def after_laps_data_callback(included_laps: dict) -> str:
     This serves to ensure those other callbacks are only fired after laps data is loaded.
     """
     return str(included_laps.keys())
+
+
+@callback(
+    Output("session-data", "data"),
+    Input("session-info", "data"),
+    prevent_initial_call=True,
+)
+def update_session_data_store(session_info: Session_info | None) -> dict:
+    """Update session-data store for analysis tab."""
+    if not session_info:
+        return {}
+
+    season, round_number, session_name, event_name, drivers, starting_grid = session_info
+    return {
+        "season": season,
+        "round_number": round_number,
+        "session_type": session_name,
+        "event_name": event_name,
+        "drivers": drivers,
+        "starting_grid": starting_grid,
+    }
+
