@@ -1,174 +1,141 @@
 # F1 Visualizer
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE.txt)
 
-This repository contains the code for the **F1 Visualizer** dashboard as well as engineered data for F1 races from the 2018 season onwards.
+An interactive dashboard and analysis toolkit for Formula 1 race data visualization and machine learning-based performance analysis. Built with Dash, Plotly, and scikit-learn.
 
-The visualizations in this README are automatically updated to reflect the latest race.
+---
 
-## Visualizations of the Most Recent Race
+## Overview
 
-<details>
-    <summary>
-        <b>Pit Stop Strategies</b>
-    </summary>
-    <img src="Docs/visuals/strategy.png", alt="strategy">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>strategy_barplot(season, event, session_type)</code>
-    </details>
-</details>
+F1 Visualizer provides comprehensive tools for analyzing Formula 1 race data from the 2018 season onwards. The platform combines real-time visualization capabilities with machine learning models to deliver insights into driver performance, race strategies, and competitive dynamics.
 
-<details>
-    <summary>
-        <b>Position Changes</b>
-    </summary>
-    <img src="Docs/visuals/position.png" alt="position">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>driver_stats_scatterplot(season, event, session_type)</code>
-    </details>
-</details>
+### Key Features
 
-<details>
-    <summary>
-        <b>Point Finishers Race Pace</b>
-    </summary>
-    <img src="Docs/visuals/laptime.png" alt="laptime">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>strategy_barplot(season, event, session_type, drivers=10)</code>
-    </details>
-</details>
+- **Interactive Dashboard**: Web-based interface for exploring race data with real-time filtering and visualization
+- **Strategy Analysis**: Pit stop timing, tyre degradation curves, and stint comparisons
+- **Driver Performance**: Lap time distributions, position changes, and pace comparisons
+- **ML-Powered Analytics**: Driving style clustering, anomaly detection, and performance ranking
+- **Data Pipeline**: Automated preprocessing with validation and caching
 
-<details>
-    <summary>
-        <b>Fuel-adjusted lap times</b>
-    </summary>
-    <img src="Docs/visuals/fuel_adjusted.png" alt="fuel_adjusted">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>driver_stats_scatterplot(season, event, session_type, drivers=10, y="FuelAdjLapTime")</code>
-    </details>
-</details>
+---
 
-<details>
-    <summary>
-        <b>Podium Finishers Gap to Winner</b>
-    </summary>
-    <img src="Docs/visuals/podium_gap.png" alt="podium gap">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>driver_stats_lineplot(season, event, session_type, drivers=3, y="GapTo{winner}")</code>
-    </details>
-</details>
+## Installation
 
-<details>
-    <summary>
-        <b>Teammate Pace Comparisons</b>
-    </summary>
-    Boxplot visualization:
-    <img src="Docs/visuals/teammate_box.png" alt="teammate pace boxplot">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>driver_stats_distplot(season, event, session_type, violin=False, swarm=False, teammate_comp=True)</code>
-    </details>
-    Violinplot with all laptimes:
-    <img src="Docs/visuals/teammate_violin.png" alt="teammate pace violinplot">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>driver_stats_distplot(season, event, session_type, teammate_comp=True)</code>
-    </details>
-</details>
+### Requirements
 
-<details>
-    <summary>
-        <b>Driver Pace Comparison</b>
-    </summary>
-    <img src="Docs/visuals/driver_pace.png" alt="driver pace comparison">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>driver_stats_distplot(season, event, session_type)</code>
-    </details>
-</details>
+- Python 3.10 or higher
+- pip or uv package manager
 
-<details>
-    <summary>
-        <b>Team Pace Ranking</b>
-    </summary>
-    <img src="Docs/visuals/team_pace.png" alt="team pace comparison">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        See <code>readme_machine.py</code>
-    </details>
-</details>
+### Quick Start
 
-## Build
+```bash
+# Clone the repository
+git clone https://github.com/maybemnv/F1-Visualizer.git
+cd F1-Visualizer
 
-Build with `pip install -e .` Using a Python virtual environment is highly recommended.
+# Create virtual environment
+uv venv
+.venv\Scripts\activate
 
-## Dashboard
+# Install dependencies
+uv add -r requirements.txt
 
-Run dashboard locally with `python3 app.py`. Debug mode can be enabled by setting `app.run(debug=True)` in `app.py`.
+# Run the dashboard
+uv run app.py
+```
 
-## Contributing
+The dashboard will be available at `http://localhost:8050`.
 
-You should install pre-commit hooks with `pre-commit install`.
+---
 
-## Data Source
+## Dashboard Usage
 
-All data sourced from the [FastF1](https://github.com/theOehrly/Fast-F1) package.
+### Loading Session Data
 
-## Data Availability
+1. Select a season from the dropdown menu
+2. Choose an event (Grand Prix)
+3. Select session type (Race or Sprint)
+4. Click "Load Session" to fetch data
 
-Data from all grand prixs and sprint races beginning in the 2018 season, excluding test sessions, are available. This repository will be automatically updated during the F1 season.
+### Available Visualizations
 
-## Metrics Definitions
+| Tab          | Description                                                          |
+| ------------ | -------------------------------------------------------------------- |
+| Strategy     | Pit stop strategies as horizontal bar charts with tyre compounds     |
+| Scatterplot  | Individual lap times by driver with compound and tyre age indicators |
+| Lineplot     | Position or gap progression throughout the race                      |
+| Distribution | Lap time distributions as violin or box plots                        |
+| Compound     | Tyre degradation analysis across different compounds                 |
+| Analysis     | ML-powered clustering, anomaly detection, and rankings               |
 
-See `SCHEMA.md` for details on the columns provided in `Data/all_laps_*.csv` and `Data/transformed_laps_*.csv` files.
+### ML Analysis Features
 
-## Additional Examples
+The Analysis tab provides three machine learning capabilities:
 
-<details>
-    <summary>
-        <b>Tyre Degradation Lineplot</b>
-    </summary>
-    <img src="Docs/examples/tyre_line.png">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>compounds_lineplot(seasons, events)</code>
-    </details>
-</details>
+- **Driving Style Clusters**: K-Means clustering identifies driving patterns (Aggressive, Consistent, Strategic, Qualifier)
+- **Performance Anomalies**: Isolation Forest detects unusual lap times and position changes
+- **Driver Rankings**: Gradient Boosting model ranks drivers based on performance metrics---
 
-<details>
-    <summary>
-        <b>Tyre Degradation Distribution Plot</b>
-    </summary>
-    <img src="Docs/examples/tyre_dist.png">
-    <details>
-        <summary>
-            <b>Function call:</b>
-        </summary>
-        <code>compounds_distplot(seasons, events)</code>
-    </details>
-</details>
+## Project Structure
+
+```
+F1-Visualizer/
+├── app.py                 # Application entry point
+├── config.py              # Configuration management
+├── dashboard/
+│   ├── layout.py          # UI layout composition
+│   ├── callbacks/         # Dash callback handlers
+│   ├── components/        # Reusable UI components
+│   └── graphs.py          # Plotly graph generators
+├── f1_visualization/
+│   ├── preprocess.py      # Data transformation pipeline
+│   ├── plots/             # Matplotlib plotting functions
+│   ├── ml/                # Machine learning models
+│   ├── cache/             # Multi-level caching system
+│   └── schemas/           # Pydantic data validation
+├── Data/                  # Race and sprint session data
+├── tests/                 # Unit and integration tests
+├── Dockerfile             # Container configuration
+└── docker-compose.yml     # Multi-container orchestration
+```
+
+---
+
+## Data Pipeline
+
+### Source
+
+All data is sourced from the [FastF1](https://github.com/theOehrly/Fast-F1) package, which provides access to official F1 timing data.
+
+### Availability
+
+- Grand Prix races: 2018 season onwards
+- Sprint races: 2021 season onwards
+- Excludes test sessions and practice data
+
+### Schema
+
+Refer to `SCHEMA.md` for detailed column definitions in the processed data files.
+
+---
+
+## Configuration
+
+Environment variables (prefix `F1_`):
+
+| Variable           | Default   | Description         |
+| ------------------ | --------- | ------------------- |
+| `F1_HOST`          | 127.0.0.1 | Server bind address |
+| `F1_PORT`          | 8050      | Server port         |
+| `F1_LOG_LEVEL`     | INFO      | Logging verbosity   |
+| `F1_CACHE_ENABLED` | true      | Enable data caching |
+| `F1_DATA_DIR`      | ./Data    | Data directory path |
+
+---
+
+## License
+
+This project is licensed under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for details.

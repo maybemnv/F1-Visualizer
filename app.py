@@ -15,9 +15,15 @@ warnings.filterwarnings(action="ignore", message="Driver", category=FutureWarnin
 # Initialize Dash app
 app = Dash(
     __name__,
-    external_stylesheets=[dbc.themes.SANDSTONE],
-    title="F1 Visualizer - A F1 Strategy Dashboard",
-    update_title="Crunching numbers...",
+    external_stylesheets=[
+        dbc.themes.SANDSTONE,
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
+        "/assets/custom.css",
+    ],
+    assets_folder="Assets",
+    title="F1 Visualizer - Formula 1 Strategy Dashboard",
+    update_title="Loading...",
+    suppress_callback_exceptions=True,
 )
 server = app.server
 app.layout = app_layout

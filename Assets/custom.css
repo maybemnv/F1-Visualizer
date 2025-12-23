@@ -1,0 +1,436 @@
+/* F1 Visualizer - Premium CSS with F1-Style Animations */
+
+/* CSS Variables for consistent theming */
+:root {
+    --f1-red: #e10600;
+    --f1-dark: #15151e;
+    --f1-gray: #38383f;
+    --f1-light: #f8f9fa;
+    --f1-accent: #e10600;
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Global styles */
+body {
+    background-color: var(--f1-light);
+    overflow-x: hidden;
+}
+
+/* Smooth page transitions */
+.fade-in {
+    animation: fadeIn 0.6s var(--transition-smooth) forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header with gradient and animation */
+.navbar {
+    background: linear-gradient(135deg, var(--f1-dark) 0%, var(--f1-gray) 100%) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s var(--transition-smooth);
+}
+
+.navbar:hover {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo hover animation */
+.navbar img {
+    transition: transform 0.3s var(--transition-smooth);
+}
+
+.navbar img:hover {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Nav links with underline animation */
+.navbar .nav-link {
+    position: relative;
+    transition: color 0.3s var(--transition-smooth);
+}
+
+.navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--f1-red);
+    transition: all 0.3s var(--transition-smooth);
+    transform: translateX(-50%);
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active::after {
+    width: 80%;
+}
+
+/* Card with hover lift effect */
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: all 0.4s var(--transition-smooth);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    background: linear-gradient(135deg, var(--f1-red) 0%, #ff3333 100%) !important;
+    transition: all 0.3s var(--transition-smooth);
+}
+
+/* Tab styling with slide animation */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    position: relative;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+    font-weight: 600;
+    border: none;
+    padding: 14px 24px;
+    transition: all 0.3s var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-tabs .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(225, 6, 0, 0.1), transparent);
+    transition: left 0.5s var(--transition-smooth);
+}
+
+.nav-tabs .nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--f1-red);
+    background-color: rgba(225, 6, 0, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--f1-red);
+    background-color: transparent;
+    border-bottom: 3px solid var(--f1-red);
+}
+
+/* Button with pulse animation */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--f1-red) 0%, #ff3333 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(225, 6, 0, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(225, 6, 0, 0.4);
+    background: linear-gradient(135deg, #ff1a1a 0%, #ff4d4d 100%);
+}
+
+/* Dropdown with fade animation */
+.Select-menu-outer {
+    animation: dropdownFade 0.2s var(--transition-smooth);
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.Select-control {
+    border-radius: 8px !important;
+    transition: all 0.3s var(--transition-smooth);
+}
+
+.Select-control:hover {
+    border-color: var(--f1-red) !important;
+}
+
+/* Graph containers with loading animation */
+.dash-graph {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: opacity 0.3s var(--transition-smooth);
+}
+
+/* Loading spinner - F1 style */
+.dash-spinner {
+    color: var(--f1-red) !important;
+}
+
+._dash-loading {
+    position: relative;
+}
+
+._dash-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--f1-red), transparent);
+    animation: loadingBar 1.5s infinite;
+}
+
+@keyframes loadingBar {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Footer with gradient border */
+footer {
+    margin-top: auto;
+    background: linear-gradient(180deg, var(--f1-light) 0%, #e9ecef 100%);
+    position: relative;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--f1-red), #ff6666, var(--f1-red));
+    background-size: 200% 100%;
+    animation: gradientMove 3s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* Footer links with hover effect */
+footer a {
+    color: var(--f1-gray);
+    text-decoration: none;
+    transition: all 0.3s var(--transition-smooth);
+    position: relative;
+}
+
+footer a:hover {
+    color: var(--f1-red);
+    transform: translateY(-2px);
+}
+
+/* Social icons animation */
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--f1-dark);
+    color: white;
+    margin: 0 8px;
+    transition: all 0.3s var(--transition-bounce);
+}
+
+.social-icon:hover {
+    background: var(--f1-red);
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(225, 6, 0, 0.3);
+}
+
+/* Table improvements with row animation */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table tbody tr {
+    transition: all 0.3s var(--transition-smooth);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(225, 6, 0, 0.05);
+    transform: scale(1.01);
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--f1-dark) 0%, var(--f1-gray) 100%);
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+
+/* Alert animations */
+.alert {
+    border-radius: 10px;
+    border: none;
+    animation: slideIn 0.4s var(--transition-smooth);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Slider with F1 colors */
+.rc-slider-track {
+    background: linear-gradient(90deg, var(--f1-red), #ff6666);
+    height: 6px;
+}
+
+.rc-slider-handle {
+    border: 3px solid var(--f1-red);
+    width: 18px;
+    height: 18px;
+    margin-top: -6px;
+    transition: all 0.2s var(--transition-smooth);
+}
+
+.rc-slider-handle:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(225, 6, 0, 0.5);
+}
+
+.rc-slider-rail {
+    height: 6px;
+    background: #dee2e6;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--f1-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--f1-gray), var(--f1-dark));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--f1-red);
+}
+
+/* Racing stripe decorations */
+.racing-stripe {
+    position: relative;
+}
+
+.racing-stripe::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--f1-red), #ff6666, var(--f1-red));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nav-tabs .nav-link {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+    }
+    
+    .card-header h5 {
+        font-size: 1rem;
+    }
+    
+    .social-icon {
+        width: 36px;
+        height: 36px;
+        margin: 0 6px;
+    }
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+*:focus {
+    outline: 2px solid var(--f1-red);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    footer,
+    .btn {
+        display: none;
+    }
+}
