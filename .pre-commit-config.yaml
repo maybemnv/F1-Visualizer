@@ -3,23 +3,23 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        args: ["-f", "-S", "*.csv, *.png"]
+        args: ["-f", "-S", "*.csv,*.png"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Ruff version.
     rev: v0.12.4
     hooks:
-      # Run the linter.
       - id: ruff-check
         args: [--fix, --preview]
-      # Run the formatter.
       - id: ruff-format
         args: [--preview]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+    rev: v1.18.2
     hooks:
       - id: mypy
         additional_dependencies:
+          - numpy<2.3
           - pandas-stubs
           - types-seaborn
-        args: [--ignore-missing-imports, --no-error-summary]
+        args:
+          [--ignore-missing-imports, --follow-imports=skip, --no-error-summary, f1_visualization, dashboard]
         exclude: ^tests/
+        pass_filenames: false
