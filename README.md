@@ -1,7 +1,7 @@
 # F1 Visualizer
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE.txt)
 
 An interactive dashboard and analysis toolkit for Formula 1 race data visualization and machine learning-based performance analysis. Built with Dash, Plotly, and scikit-learn.
@@ -26,8 +26,8 @@ F1 Visualizer provides comprehensive tools for analyzing Formula 1 race data fro
 
 ### Requirements
 
-- Python 3.10 or higher
-- pip or uv package manager
+- Python 3.11 or higher
+- [uv](https://docs.astral.sh/uv/) package manager (recommended) or pip
 
 ### Quick Start
 
@@ -36,15 +36,11 @@ F1 Visualizer provides comprehensive tools for analyzing Formula 1 race data fro
 git clone https://github.com/maybemnv/F1-Visualizer.git
 cd F1-Visualizer
 
-# Create virtual environment
-uv venv
-.venv\Scripts\activate
-
-# Install dependencies
-uv add -r requirements.txt
+# Create virtual environment and install dependencies
+uv sync
 
 # Run the dashboard
-uv run app.py
+uv run python app.py
 ```
 
 The dashboard will be available at `http://localhost:8050`.
@@ -83,23 +79,42 @@ The Analysis tab provides three machine learning capabilities:
 
 ```
 F1-Visualizer/
-├── app.py                 # Application entry point
-├── config.py              # Configuration management
+├── app.py                    # Application entry point
+├── config.py                 # Pydantic-backed configuration
+├── pyproject.toml            # Project metadata & tool config
+├── AGENTS.md                 # Guidelines for AI-assisted development
+├── SCHEMA.md                 # CSV column definitions
+├── Assets/                   # Static assets (CSS, images)
+├── Automation/               # Deployment and data-refresh scripts
+├── Comments/                 # Design notes and documentation
+├── Data/                     # Race and sprint session data
+├── Docs/                     # Visual examples and references
 ├── dashboard/
-│   ├── layout.py          # UI layout composition
-│   ├── callbacks/         # Dash callback handlers
-│   ├── components/        # Reusable UI components
-│   └── graphs.py          # Plotly graph generators
+│   ├── layout.py             # UI layout composition
+│   ├── graphs.py             # Plotly graph generators
+│   ├── constants.py          # Plot dimensions & magic numbers
+│   ├── utils.py              # UI helper utilities
+│   ├── async_loader.py       # Async data loading
+│   ├── visualization_config.toml  # Dashboard-specific defaults
+│   ├── callbacks/            # Dash callback handlers
+│   └── components/           # Reusable UI components
 ├── f1_visualization/
-│   ├── preprocess.py      # Data transformation pipeline
-│   ├── plots/             # Matplotlib plotting functions
-│   ├── ml/                # Machine learning models
-│   ├── cache/             # Multi-level caching system
-│   └── schemas/           # Pydantic data validation
-├── Data/                  # Race and sprint session data
-├── tests/                 # Unit and integration tests
-├── Dockerfile             # Container configuration
-└── docker-compose.yml     # Multi-container orchestration
+│   ├── preprocess.py         # Data transformation pipeline
+│   ├── data_loader.py        # CSV loading & dtype correction
+│   ├── visualization.py      # Re-exports for backward compat
+│   ├── annotations.py        # Shared type aliases (Session, Figure, Axes)
+│   ├── consts.py             # Seasons, sprint rounds, compound maps
+│   ├── exceptions.py         # Domain-specific exception classes
+│   ├── logging_config.py     # Centralized logging configuration
+│   ├── plots/                # Matplotlib plotting functions
+│   ├── ml/                   # Machine learning models
+│   ├── cache/                # Multi-level caching (memory + disk)
+│   ├── schemas/              # Pydantic validation models
+│   ├── session/              # Session info helpers
+│   └── helpers/              # Gap calculation, SC detection, etc.
+├── tests/                    # Unit and integration tests
+├── Dockerfile                # Container configuration
+└── docker-compose.yml        # Multi-container orchestration
 ```
 
 ---
@@ -124,15 +139,25 @@ Refer to `SCHEMA.md` for detailed column definitions in the processed data files
 
 ## Configuration
 
-Environment variables (prefix `F1_`):
+Settings are managed via [Pydantic Settings](https://docs.pydantic.dev/latest/usage/pydantic_settings/)
+with the `F1_` prefix. A `.env` file is supported.
 
-| Variable           | Default   | Description         |
-| ------------------ | --------- | ------------------- |
-| `F1_HOST`          | 127.0.0.1 | Server bind address |
-| `F1_PORT`          | 8050      | Server port         |
-| `F1_LOG_LEVEL`     | INFO      | Logging verbosity   |
-| `F1_CACHE_ENABLED` | true      | Enable data caching |
-| `F1_DATA_DIR`      | ./Data    | Data directory path |
+| Variable                    | Default          | Description                          |
+| --------------------------- | ---------------- | ------------------------------------ |
+| `F1_HOST`                   | 127.0.0.1        | Server bind address                  |
+| `F1_PORT`                   | 8050             | Server port                          |
+| `F1_DEBUG`                  | false            | Debug mode                           |
+| `F1_LOG_LEVEL`              | INFO             | Logging verbosity                    |
+| `F1_LOG_TO_FILE`            | true             | Enable file logging                  |
+| `F1_LOG_MAX_BYTES`          | 10_000_000       | Max log file size                    |
+| `F1_LOG_BACKUP_COUNT`       | 5                | Number of log backups                |
+| `F1_DATA_DIR`               | ./Data           | Data directory path                  |
+| `F1_CACHE_DIR`              | ./.cache         | Cache directory path                 |
+| `F1_CACHE_ENABLED`          | true             | Enable data caching                  |
+| `F1_MEMORY_CACHE_SIZE`      | 256              | LRU cache size (entries)             |
+| `F1_DISK_CACHE_TTL_HOURS`   | 24               | Disk cache TTL                       |
+| `F1_MIN_LAPS_FOR_ANALYSIS`  | 5                | Minimum laps for driver analysis     |
+| `F1_UPPER_BOUND_DEFAULT`    | 107.0            | Default lap time percentile cap      |
 
 ---
 
