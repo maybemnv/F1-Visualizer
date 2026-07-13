@@ -89,29 +89,32 @@ F1-Visualizer/
 ├── Comments/                 # Design notes and documentation
 ├── Data/                     # Race and sprint session data
 ├── Docs/                     # Visual examples and references
-├── dashboard/
-│   ├── layout.py             # UI layout composition
-│   ├── graphs.py             # Plotly graph generators
-│   ├── constants.py          # Plot dimensions & magic numbers
-│   ├── utils.py              # UI helper utilities
-│   ├── async_loader.py       # Async data loading
-│   ├── callbacks/            # Dash callback handlers
-│   └── components/           # Reusable UI components
-├── f1_visualization/
-│   ├── preprocess.py         # Data transformation pipeline
-│   ├── data_loader.py        # CSV loading & dtype correction
-│   ├── visualization.py      # Re-exports for backward compat
-│   ├── annotations.py        # Shared type aliases (Session, Figure, Axes)
-│   ├── consts.py             # Seasons, sprint rounds, compound maps
-│   ├── exceptions.py         # Domain-specific exception classes
-│   ├── logging_config.py     # Centralized logging configuration
-│   ├── plots/                # Matplotlib plotting functions
-│   ├── ml/                   # Machine learning models
-│   ├── cache/                # Multi-level caching (memory + disk)
-│   ├── schemas/              # Pydantic validation models
-│   ├── session/              # Session info helpers
-│   └── helpers/              # Gap calculation, SC detection, etc.
+├── src/                      # Source packages
+│   ├── dashboard/
+│   │   ├── layout.py         # UI layout composition
+│   │   ├── graphs.py         # Plotly graph generators
+│   │   ├── constants.py      # Plot dimensions & magic numbers
+│   │   ├── utils.py          # UI helper utilities
+│   │   ├── async_loader.py   # Async data loading
+│   │   ├── callbacks/        # Dash callback handlers
+│   │   └── components/       # Reusable UI components
+│   └── f1_visualization/
+│       ├── preprocess.py     # Data transformation pipeline
+│       ├── data_loader.py    # CSV loading & dtype correction
+│       ├── visualization.py  # Re-exports for backward compat
+│       ├── annotations.py    # Shared type aliases (Session, Figure, Axes)
+│       ├── consts.py         # Seasons, sprint rounds, compound maps
+│       ├── exceptions.py     # Domain-specific exception classes
+│       ├── logging_config.py # Centralized logging configuration
+│       ├── plots/            # Matplotlib plotting functions
+│       ├── ml/               # Machine learning models
+│       ├── cache/            # Multi-level caching (memory + disk)
+│       ├── schemas/          # Pydantic validation models
+│       ├── session/          # Session info helpers
+│       └── helpers/          # Gap calculation, SC detection, etc.
 ├── tests/                    # Unit and integration tests
+│   ├── dashboard/            # Dashboard package tests
+│   └── f1_visualization/     # Core package tests
 ├── Dockerfile                # Container configuration
 └── docker-compose.yml        # Multi-container orchestration
 ```

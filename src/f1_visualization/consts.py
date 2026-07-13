@@ -5,7 +5,7 @@ from pathlib import Path
 
 import tomli
 
-ROOT_PATH = Path(__file__).absolute().parents[1]
+ROOT_PATH = Path(__file__).absolute().parents[2]
 DATA_PATH = ROOT_PATH / "Data"
 
 CURRENT_SEASON = datetime.now().year  # noqa: DTZ005

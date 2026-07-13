@@ -15,7 +15,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: uv run mypy f1_visualization dashboard
+        entry: uv run mypy src/f1_visualization src/dashboard
         language: system
         exclude: ^tests/
         pass_filenames: false

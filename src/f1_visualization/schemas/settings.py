@@ -19,15 +19,15 @@ class AppSettings(BaseSettings):
 
     # Paths
     data_dir: Path = Field(
-        default=Path(__file__).parents[2] / "Data",
+        default=Path(__file__).parents[3] / "Data",
         description="Directory containing F1 data files",
     )
     cache_dir: Path = Field(
-        default=Path(__file__).parents[2] / ".cache",
+        default=Path(__file__).parents[3] / ".cache",
         description="Directory for cache files",
     )
     log_dir: Path = Field(
-        default=Path(__file__).parents[2] / "logs",
+        default=Path(__file__).parents[3] / "logs",
         description="Directory for log files",
     )
 

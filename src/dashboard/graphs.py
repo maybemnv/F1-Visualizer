@@ -14,7 +14,7 @@ from plotly.subplots import make_subplots
 from f1_visualization.annotations import PlotArgs, Session
 from f1_visualization.visualization import find_sc_laps
 
-config_path = Path(__file__).absolute().parents[1] / "Data" / "visualization_config.toml"
+config_path = Path(__file__).absolute().parents[2] / "Data" / "visualization_config.toml"
 with open(config_path, "rb") as toml:
     DASH_VISUAL_CONFIG = tomli.load(toml)
 

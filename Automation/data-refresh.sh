@@ -54,7 +54,7 @@ UTC=$(date)
 # shutdown dash app, ignore non-zero return status in case there is no gunicorn process running
 pkill -cef gunicorn || true
 
-python3 f1_visualization/preprocess.py
+python3 -m f1_visualization.preprocess
 
 # update README and commit if there are unstaged changes
 if [[ -n "$(git status -s)" ]]; then
