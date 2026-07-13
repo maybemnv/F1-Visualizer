@@ -290,6 +290,7 @@ stores = html.Div([
     dcc.Store(id="last-race-round"),
     dcc.Store(id="last-sprint-round"),
     dcc.Store(id="laps"),
+    dcc.Store(id="data-ready"),
     session_data_store,
     html.Span(id="laps-data-sequencer", hidden=True),
 ])

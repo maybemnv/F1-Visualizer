@@ -18,11 +18,12 @@ SessionInfo: TypeAlias = tuple[int, int, str, str, tuple[str, ...], dict[str, in
     Output("strategy-plot", "figure"),
     Input("drivers", "value"),
     Input("laps-data-sequencer", "children"),
+    Input("data-ready", "data"),
     State("laps", "data"),
     State("session-info", "data"),
 )
 def render_strategy_plot(
-    drivers: list[str], _: str, included_laps: dict, session_info: SessionInfo
+    drivers: list[str], _: str, __: bool, included_laps: dict, session_info: SessionInfo
 ) -> go.Figure:
     """Filter laps and configure strategy plot title."""
     if not included_laps or not drivers:
@@ -43,6 +44,7 @@ def render_strategy_plot(
     Input("scatter-y", "value"),
     Input("upper-bound-scatter", "value"),
     Input("lap-numbers-scatter", "value"),
+    Input("data-ready", "data"),
     State("laps", "data"),
     State("session-info", "data"),
     State("teammate-comp", "value"),
@@ -52,6 +54,7 @@ def render_scatterplot(
     y: str,
     upper_bound: float,
     lap_numbers: list[int],
+    _: bool,
     included_laps: dict,
     session_info: SessionInfo,
     teammate_comp: bool,
@@ -86,6 +89,7 @@ def render_scatterplot(
     Input("upper-bound-line", "value"),
     Input("lap-numbers-line", "value"),
     Input("show-starting-grid", "value"),
+    Input("data-ready", "data"),
     State("laps", "data"),
     State("session-info", "data"),
 )
@@ -95,6 +99,7 @@ def render_lineplot(
     upper_bound: float,
     lap_numbers: list[int],
     starting_grid: list,
+    _: bool,
     included_laps: dict,
     session_info: SessionInfo,
 ) -> go.Figure:
@@ -132,6 +137,7 @@ def render_lineplot(
     Input("upper-bound-dist", "value"),
     Input("boxplot", "value"),
     Input("laps-data-sequencer", "children"),
+    Input("data-ready", "data"),
     State("laps", "data"),
     State("session-info", "data"),
     State("teammate-comp", "value"),
@@ -141,6 +147,7 @@ def render_distplot(
     upper_bound: int,
     boxplot: bool,
     _: str,
+    __: bool,
     included_laps: dict,
     session_info: SessionInfo,
     teammate_comp: bool,
@@ -170,12 +177,14 @@ def render_distplot(
     Output("compound-plot", "figure"),
     Input("compounds", "value"),
     Input("compound-unit", "value"),
+    Input("data-ready", "data"),
     State("laps", "data"),
     State("session-info", "data"),
 )
 def render_compound_plot(
     compounds: list[str],
     show_seconds: bool,
+    _: bool,
     included_laps: dict,
     session_info: SessionInfo,
 ) -> go.Figure:
