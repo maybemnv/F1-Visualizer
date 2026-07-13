@@ -141,6 +141,22 @@ def after_laps_data_callback(included_laps: dict) -> str:
 
 
 @callback(
+    Output("data-ready", "data"),
+    Input("laps", "data"),
+    Input("session-info", "data"),
+    prevent_initial_call=True,
+)
+def signal_data_ready(laps: dict | None, session_info: tuple | None) -> bool:
+    """
+    Signal that both laps and session-info are available.
+
+    This is the single trigger all plot callbacks watch so they render
+    exactly once after all data processing is complete.
+    """
+    return laps is not None and session_info is not None
+
+
+@callback(
     Output("session-data", "data"),
     Input("session-info", "data"),
     prevent_initial_call=True,
