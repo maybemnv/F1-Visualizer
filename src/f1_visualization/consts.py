@@ -1,12 +1,12 @@
 """Shared variables for f1_visualization module."""
 
 from datetime import datetime
-from pathlib import Path
 
 import tomli
 
-ROOT_PATH = Path(__file__).absolute().parents[2]
-DATA_PATH = ROOT_PATH / "Data"
+from f1_visualization.schemas.settings import settings
+
+DATA_PATH = settings.data_dir
 
 CURRENT_SEASON = datetime.now().year  # noqa: DTZ005
 

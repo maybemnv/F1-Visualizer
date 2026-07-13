@@ -10,7 +10,7 @@ handle_failure() {
     error_line=$BASH_LINENO
     error_command=$BASH_COMMAND
 
-    if [[ "$error_command" == *preprocess.py* ]]
+    if [[ "$error_command" == *preprocess* ]]
     then
         # failure in preprocessing, bad data might have been written to file
         git restore .

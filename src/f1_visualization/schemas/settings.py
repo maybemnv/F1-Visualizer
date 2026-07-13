@@ -7,6 +7,21 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def _resolve_project_root() -> Path:
+    """
+    Walk up from this file to find the project root (pyproject.toml sentinel).
+
+    Works in both source-tree imports and wheel-installed deployments
+    (Docker), provided pyproject.toml is present at the root.
+    Falls back to a dumb parent-counting heuristic.
+    """
+    path = Path(__file__).resolve()
+    for parent in path.parents:
+        if (parent / "pyproject.toml").is_file():
+            return parent
+    return path.parents[3]
+
+
 class AppSettings(BaseSettings):
     """Application settings with environment variable support."""
 
@@ -19,15 +34,15 @@ class AppSettings(BaseSettings):
 
     # Paths
     data_dir: Path = Field(
-        default=Path(__file__).parents[3] / "Data",
+        default_factory=lambda: _resolve_project_root() / "Data",
         description="Directory containing F1 data files",
     )
     cache_dir: Path = Field(
-        default=Path(__file__).parents[3] / ".cache",
+        default_factory=lambda: _resolve_project_root() / ".cache",
         description="Directory for cache files",
     )
     log_dir: Path = Field(
-        default=Path(__file__).parents[3] / "logs",
+        default_factory=lambda: _resolve_project_root() / "logs",
         description="Directory for log files",
     )
 
