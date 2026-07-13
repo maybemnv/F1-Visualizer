@@ -4,7 +4,7 @@ name = "f1_visualization"
 authors = [{ name = "Manav" }]
 description = "F1 Visualizer - Interactive dashboard for Formula 1 race data visualization since 2018"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "fastf1>=3.6.0",
     "pandas>=2.0.0",
@@ -19,8 +19,11 @@ dependencies = [
     "dash-bootstrap-components>=2.0.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
-    "scikit-learn>=1.3.0",
-    "xgboost>=3.1.2",
+    "scikit-learn==1.8.0",
+    "xgboost==3.1.2",
+    "plotly>=5.0.0",
+    "pytest==9.0.2",
+    "pytest-cov==7.0.0",
 ]
 
 [project.optional-dependencies]
