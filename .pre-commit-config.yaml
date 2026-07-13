@@ -11,15 +11,11 @@ repos:
         args: [--fix, --preview]
       - id: ruff-format
         args: [--preview]
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.18.2
+  - repo: local
     hooks:
       - id: mypy
-        additional_dependencies:
-          - numpy<2.3
-          - pandas-stubs
-          - types-seaborn
-        args:
-          [--ignore-missing-imports, --follow-imports=skip, --no-error-summary, f1_visualization, dashboard]
+        name: mypy
+        entry: uv run mypy f1_visualization dashboard
+        language: system
         exclude: ^tests/
         pass_filenames: false
