@@ -23,7 +23,7 @@ def _correct_dtype(df_laps: pd.DataFrame) -> pd.DataFrame:
     ].apply(pd.to_timedelta)
 
     df_laps["TrackStatus"] = df_laps["TrackStatus"].astype(str)
-    df_laps["FreshTyre"] = df_laps["FreshTyre"].astype(str)
+    df_laps["FreshTyre"] = df_laps["FreshTyre"].fillna("Unknown").astype(str)
 
     return df_laps
 

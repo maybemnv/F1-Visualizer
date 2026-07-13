@@ -180,7 +180,12 @@ def correct_dtype(df_laps: pd.DataFrame) -> pd.DataFrame:
     ].apply(pd.to_timedelta)
     df_laps["LapTime"] = df_laps["LapTime"].dt.total_seconds()
 
-    df_laps["IsPersonalBest"] = df_laps["IsPersonalBest"].fillna(value="False").astype(bool)
+    df_laps["IsPersonalBest"] = (
+        df_laps["IsPersonalBest"]
+        .fillna(False)
+        .map(lambda value: value if isinstance(value, bool) else str(value).lower() == "true")
+        .astype(bool)
+    )
 
     # make sure TrackStatus is stored as ints so it can be easily converted to strings later
     df_laps["TrackStatus"] = df_laps["TrackStatus"].fillna(0.0).astype(int)
