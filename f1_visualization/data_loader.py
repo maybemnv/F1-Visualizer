@@ -6,7 +6,6 @@ import pandas as pd
 
 from f1_visualization.consts import DATA_PATH, SESSION_NAMES
 
-logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +29,7 @@ def _correct_dtype(df_laps: pd.DataFrame) -> pd.DataFrame:
 
 def load_laps() -> dict[int, dict[str, pd.DataFrame]]:
     """Load transformed data by season."""
-    dfs = {}
+    dfs: dict[int, dict[str, pd.DataFrame]] = {}
 
     for file in DATA_PATH.glob("**/transformed_*.csv"):
         season = int(file.stem.split("_")[-1])

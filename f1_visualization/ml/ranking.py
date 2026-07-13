@@ -29,7 +29,7 @@ class DriverRanking:
 class DriverRankingModel:
     """Gradient Boosting based driver ranking model."""
 
-    def __init__(self, random_state: int = 42):
+    def __init__(self, random_state: int = 42) -> None:
         """
         Initialize ranking model.
 
@@ -110,17 +110,21 @@ class DriverRankingModel:
             return []
 
         # Aggregate features per driver
-        driver_stats = features_df.groupby("driver").agg({
-            "median_lap_time": "mean",
-            "lap_time_std": "mean",
-            "positions_gained": "sum",
-            "avg_position": "mean",
-            "pct_from_fastest": "mean",
-            "consistency_score": "mean",
-            "avg_stint_length": "mean",
-            "total_laps": "sum",
-            "round_number": "count",  # Number of races
-        }).reset_index()
+        driver_stats = (
+            features_df.groupby("driver")
+            .agg({
+                "median_lap_time": "mean",
+                "lap_time_std": "mean",
+                "positions_gained": "sum",
+                "avg_position": "mean",
+                "pct_from_fastest": "mean",
+                "consistency_score": "mean",
+                "avg_stint_length": "mean",
+                "total_laps": "sum",
+                "round_number": "count",  # Number of races
+            })
+            .reset_index()
+        )
 
         driver_stats = driver_stats.rename(columns={"round_number": "races_completed"})
 

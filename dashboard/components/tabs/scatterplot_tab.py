@@ -5,7 +5,6 @@ from dash import dcc, html
 
 from dashboard.components.tabs.common import lap_numbers_slider, upper_bound_slider
 
-
 scatter_y_options = [
     {"label": "Lap Time", "value": "LapTime"},
     {"label": "Seconds to Same Condition (Dry/Wet) Median", "value": "DeltaToRep"},

@@ -10,16 +10,15 @@ from dashboard.components.tabs.scatterplot_tab import scatter_y_options, scatter
 from dashboard.components.tabs.strategy_tab import strategy_tab
 
 __all__ = [
-    "upper_bound_slider",
-    "lap_numbers_slider",
-    "strategy_tab",
-    "scatterplot_tab",
-    "scatter_y_options",
-    "lineplot_tab",
-    "line_y_options",
-    "distplot_tab",
-    "compound_plot_tab",
-    "legends_tab",
     "analysis_tab",
+    "compound_plot_tab",
+    "distplot_tab",
+    "lap_numbers_slider",
+    "legends_tab",
+    "line_y_options",
+    "lineplot_tab",
+    "scatter_y_options",
+    "scatterplot_tab",
+    "strategy_tab",
+    "upper_bound_slider",
 ]
-

@@ -11,8 +11,7 @@ import dashboard.graphs as pg
 from dashboard.constants import MIN_LAPS_FOR_DISTPLOT
 from f1_visualization.visualization import remove_low_data_drivers, teammate_comp_order
 
-# Type alias for session info tuple
-Session_info: TypeAlias = tuple[int, int, str, str, list[str], dict[str, int]]
+SessionInfo: TypeAlias = tuple[int, int, str, str, tuple[str, ...], dict[str, int]]
 
 
 @callback(
@@ -23,7 +22,7 @@ Session_info: TypeAlias = tuple[int, int, str, str, list[str], dict[str, int]]
     State("session-info", "data"),
 )
 def render_strategy_plot(
-    drivers: list[str], _: str, included_laps: dict, session_info: Session_info
+    drivers: list[str], _: str, included_laps: dict, session_info: SessionInfo
 ) -> go.Figure:
     """Filter laps and configure strategy plot title."""
     if not included_laps or not drivers:
@@ -54,7 +53,7 @@ def render_scatterplot(
     upper_bound: float,
     lap_numbers: list[int],
     included_laps: dict,
-    session_info: Session_info,
+    session_info: SessionInfo,
     teammate_comp: bool,
 ) -> go.Figure:
     """Filter laps and configure scatterplot title."""
@@ -71,7 +70,7 @@ def render_scatterplot(
     ]
 
     if teammate_comp:
-        drivers = teammate_comp_order(included_laps, drivers, y)
+        drivers = list(teammate_comp_order(included_laps, drivers, y))
 
     fig = pg.stats_scatterplot(included_laps, drivers, y)
     event_name = session_info[3]
@@ -97,7 +96,7 @@ def render_lineplot(
     lap_numbers: list[int],
     starting_grid: list,
     included_laps: dict,
-    session_info: Session_info,
+    session_info: SessionInfo,
 ) -> go.Figure:
     """Filter laps and configure lineplot title."""
     if not included_laps or not drivers:
@@ -117,7 +116,7 @@ def render_lineplot(
         included_laps,
         drivers,
         y,
-        upper_bound,
+        int(upper_bound),
         f.get_session(*session_info[:3]),
         session_info[5] if starting_grid else {},
     )
@@ -143,7 +142,7 @@ def render_distplot(
     boxplot: bool,
     _: str,
     included_laps: dict,
-    session_info: Session_info,
+    session_info: SessionInfo,
     teammate_comp: bool,
 ) -> go.Figure:
     """Filter laps and render distribution plot."""
@@ -157,8 +156,8 @@ def render_distplot(
     ]
 
     if teammate_comp:
-        drivers = teammate_comp_order(included_laps, drivers, by="LapTime")
-    drivers = remove_low_data_drivers(included_laps, drivers, MIN_LAPS_FOR_DISTPLOT)
+        drivers = list(teammate_comp_order(included_laps, drivers, by="LapTime"))
+    drivers = list(remove_low_data_drivers(included_laps, drivers, MIN_LAPS_FOR_DISTPLOT))
 
     fig = pg.stats_distplot(included_laps, drivers, boxplot, f.get_session(*session_info[:3]))
     event_name = session_info[3]
@@ -178,7 +177,7 @@ def render_compound_plot(
     compounds: list[str],
     show_seconds: bool,
     included_laps: dict,
-    session_info: Session_info,
+    session_info: SessionInfo,
 ) -> go.Figure:
     """Filter laps and render compound performance plot."""
     if not included_laps or not compounds:

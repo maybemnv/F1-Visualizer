@@ -3,7 +3,6 @@
 import dash_bootstrap_components as dbc
 from dash import html
 
-
 compound_color_scheme_card = dbc.Card(
     [
         dbc.CardHeader(html.B("Compounds Color Scheme"), style={"textAlign": "center"}),

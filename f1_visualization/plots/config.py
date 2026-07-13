@@ -1,6 +1,6 @@
 """Plotting configuration and utility functions."""
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -9,7 +9,7 @@ from f1_visualization.annotations import Axes, PlotArgs
 from f1_visualization.consts import COMPOUND_SELECTION, VISUAL_CONFIG
 
 
-def find_legend_order(labels: Iterable[str]) -> list[int]:
+def find_legend_order(labels: Sequence[str]) -> list[int]:
     """
     Provide the index of a list of compounds sorted from soft to hard.
 
@@ -132,7 +132,7 @@ def deduplicate_legend_labels(ax: Axes, **kwargs) -> None:  # noqa: ANN003
 
 def convert_compound_name(
     season: int, round_number: int, compounds: Iterable[str]
-) -> tuple[str]:
+) -> tuple[str, ...]:
     """Convert relative compound names to absolute compound names."""
     compound_to_index = {"SOFT": 2, "MEDIUM": 1, "HARD": 0}
     if season == 2018:  # noqa: PLR2004

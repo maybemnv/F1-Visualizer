@@ -3,7 +3,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-
 add_gap_row = dbc.Row(
     dbc.Card([
         dbc.CardHeader("Calculate gaps between drivers"),

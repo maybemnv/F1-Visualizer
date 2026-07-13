@@ -31,7 +31,9 @@ logger = logging.getLogger(__name__)
 )
 def toggle_controls(analysis_type: str) -> tuple[dict, dict]:
     """Show/hide controls based on analysis type."""
-    clusters_style = {"display": "block"} if analysis_type == "clustering" else {"display": "none"}
+    clusters_style = (
+        {"display": "block"} if analysis_type == "clustering" else {"display": "none"}
+    )
     anomaly_style = {"display": "block"} if analysis_type == "anomaly" else {"display": "none"}
     return clusters_style, anomaly_style
 
@@ -48,7 +50,7 @@ def toggle_controls(analysis_type: str) -> tuple[dict, dict]:
     prevent_initial_call=True,
 )
 def run_analysis(
-    n_clicks: int,
+    _n_clicks: int,
     session_data: dict | None,
     analysis_type: str,
     n_clusters: int,
@@ -72,14 +74,13 @@ def run_analysis(
 
     if analysis_type == "clustering":
         return _run_clustering_analysis(df_laps, season, n_clusters)
-    elif analysis_type == "anomaly":
+    if analysis_type == "anomaly":
         round_number = session_data.get("round_number", 1)
         return _run_anomaly_analysis(df_laps, round_number, anomaly_sensitivity)
-    elif analysis_type == "ranking":
+    if analysis_type == "ranking":
         return _run_ranking_analysis(df_laps, season)
-    else:
-        empty_fig = go.Figure()
-        return empty_fig, html.Div(), html.Div()
+    empty_fig = go.Figure()
+    return empty_fig, html.Div(), html.Div()
 
 
 def _run_clustering_analysis(
@@ -98,14 +99,18 @@ def _run_clustering_analysis(
         return empty_fig, html.Div(), html.Div()
 
     # Aggregate per driver
-    driver_features = features_df.groupby("driver").agg({
-        "median_lap_time": "mean",
-        "lap_time_std": "mean",
-        "positions_gained": "mean",
-        "avg_position": "mean",
-        "pct_from_fastest": "mean",
-        "consistency_score": "mean",
-    }).reset_index()
+    driver_features = (
+        features_df.groupby("driver")
+        .agg({
+            "median_lap_time": "mean",
+            "lap_time_std": "mean",
+            "positions_gained": "mean",
+            "avg_position": "mean",
+            "pct_from_fastest": "mean",
+            "consistency_score": "mean",
+        })
+        .reset_index()
+    )
 
     # Run clustering
     results, summary = cluster_drivers(driver_features, n_clusters=n_clusters)
@@ -116,7 +121,7 @@ def _run_clustering_analysis(
 
     if len(available_cols) >= 2:  # noqa: PLR2004
         X = driver_features[available_cols].fillna(0).values
-        
+
         if X.shape[1] > 2:  # noqa: PLR2004
             pca = PCA(n_components=2)
             X_2d = pca.fit_transform(X)
@@ -201,8 +206,7 @@ def _run_anomaly_analysis(
             color = "green"
 
         lap_data = round_laps[
-            (round_laps["Driver"] == a.driver) &
-            (round_laps["LapNumber"] == a.lap_number)
+            (round_laps["Driver"] == a.driver) & (round_laps["LapNumber"] == a.lap_number)
         ]
         if not lap_data.empty:
             fig.add_trace(
@@ -252,8 +256,7 @@ def _run_ranking_analysis(
 
     # Create bar chart
     df_rankings = pd.DataFrame([
-        {"driver": r.driver, "score": r.score, "rank": r.rank}
-        for r in rankings[:15]
+        {"driver": r.driver, "score": r.score, "rank": r.rank} for r in rankings[:15]
     ])
 
     fig = px.bar(

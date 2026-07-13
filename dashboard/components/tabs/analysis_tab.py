@@ -30,8 +30,14 @@ def create_analysis_tab() -> dbc.Tab:
                                     dcc.Dropdown(
                                         id="analysis-type-dropdown",
                                         options=[
-                                            {"label": "Driving Style Clusters", "value": "clustering"},
-                                            {"label": "Performance Anomalies", "value": "anomaly"},
+                                            {
+                                                "label": "Driving Style Clusters",
+                                                "value": "clustering",
+                                            },
+                                            {
+                                                "label": "Performance Anomalies",
+                                                "value": "anomaly",
+                                            },
                                             {"label": "Driver Rankings", "value": "ranking"},
                                         ],
                                         value="clustering",
@@ -140,12 +146,10 @@ def create_cluster_summary_card(cluster_summary: dict) -> dbc.Card:
             )
         )
 
-    return dbc.Card(
-        [
-            dbc.CardHeader("Driving Styles"),
-            dbc.CardBody(dbc.ListGroup(items)),
-        ]
-    )
+    return dbc.Card([
+        dbc.CardHeader("Driving Styles"),
+        dbc.CardBody(dbc.ListGroup(items)),
+    ])
 
 
 def create_ranking_table(rankings: list) -> dbc.Table:

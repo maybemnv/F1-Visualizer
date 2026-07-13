@@ -3,13 +3,12 @@
 import logging
 from collections.abc import Iterable
 from functools import lru_cache
+from typing import cast
 
 import fastf1 as f
-import pandas as pd
 
 from f1_visualization.annotations import Session
 
-logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -42,17 +41,19 @@ def get_drivers(
     if drivers is None:
         return list(result["Abbreviation"].unique())
     if isinstance(drivers, int):
-        drivers = result["Abbreviation"].unique()[:drivers]
-        return list(drivers)
+        selected_drivers = result["Abbreviation"].unique()[:drivers]
+        return [str(driver) for driver in selected_drivers]
     if isinstance(drivers, str):
-        drivers = [drivers]
+        requested_drivers: Iterable[str | int] = [drivers]
+    else:
+        requested_drivers = drivers
 
     ret = []
-    for driver in drivers:
+    for driver in requested_drivers:
         if isinstance(driver, (int, float)):
-            ret.append(session.get_driver(str(int(driver)))["Abbreviation"])
+            ret.append(str(session.get_driver(str(int(driver)))["Abbreviation"]))
         else:
-            ret.append(session.get_driver(driver)["Abbreviation"])
+            ret.append(str(session.get_driver(str(driver))["Abbreviation"]))
 
     return ret
 
@@ -80,7 +81,7 @@ def get_session_info(
     session_type: str,
     drivers: tuple[str | int] | str | int | None = None,
     teammate_comp: bool = False,
-) -> tuple[int, str, tuple[str], Session]:
+) -> tuple[int, str, tuple[str, ...], Session]:
     """
     Retrieve session information based on season, event number/name, and session identifier.
 
@@ -103,12 +104,12 @@ def get_session_info(
         )
         session = infer_ergast_data(session)
 
-    round_number = session.event["RoundNumber"]
+    round_number = int(cast("int", session.event["RoundNumber"]))
     event_name = f"{session.event['EventName']} - {session.name}"
 
     if teammate_comp:
-        drivers = get_drivers(session, drivers, by="TeamName")
+        selected_drivers = get_drivers(session, drivers, by="TeamName")
     else:
-        drivers = get_drivers(session, drivers)
+        selected_drivers = get_drivers(session, drivers)
 
-    return round_number, event_name, tuple(drivers), session
+    return round_number, event_name, tuple(selected_drivers), session

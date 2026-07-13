@@ -21,7 +21,6 @@ build
 htmlcov
 
 # Virtual environments
-.venv
 venv
 env
 .env.local
@@ -38,19 +37,14 @@ env
 .docs
 *.md
 !README.md
-README.md
-AGENTS.md
-SCHEMA.md
 Docs
 Comments
 
 # Cache (we use volumes for this)
-.cache
 *.pkl
 *.parquet
 
 # Logs (we use volumes for this)
-logs
 *.log
 
 # Data (mounted separately)
@@ -72,11 +66,6 @@ Makefile
 readme_machine.py
 
 # Local project metadata and developer tooling
-.venv
-.cache
-logs
-pyproject.toml
-uv.lock
 .pre-commit-config.yaml
 
 # Misc

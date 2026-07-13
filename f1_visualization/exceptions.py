@@ -4,7 +4,7 @@
 class F1VisualizerError(Exception):
     """Base exception for all F1 Visualizer errors."""
 
-    def __init__(self, message: str, details: dict | None = None):
+    def __init__(self, message: str, details: dict[str, object] | None = None) -> None:
         """
         Initialize exception.
 
@@ -26,9 +26,9 @@ class DataNotFoundError(F1VisualizerError):
         season: int | None = None,
         event: str | None = None,
         session: str | None = None,
-    ):
+    ) -> None:
         """Initialize with optional context about what data was requested."""
-        details = {}
+        details: dict[str, object] = {}
         if season:
             details["season"] = season
         if event:
@@ -48,9 +48,9 @@ class ValidationError(F1VisualizerError):
         field: str | None = None,
         value: str | None = None,
         expected: str | None = None,
-    ):
+    ) -> None:
         """Initialize with validation failure context."""
-        details = {}
+        details: dict[str, object] = {}
         if field:
             details["field"] = field
         if value:
@@ -69,9 +69,9 @@ class CacheError(F1VisualizerError):
         message: str = "Cache operation failed",
         operation: str | None = None,
         key: str | None = None,
-    ):
+    ) -> None:
         """Initialize with cache operation context."""
-        details = {}
+        details: dict[str, object] = {}
         if operation:
             details["operation"] = operation
         if key:
@@ -90,9 +90,9 @@ class SessionLoadError(F1VisualizerError):
         event: str | None = None,
         session: str | None = None,
         cause: Exception | None = None,
-    ):
+    ) -> None:
         """Initialize with session context."""
-        details = {"season": season, "event": event, "session": session}
+        details: dict[str, object] = {"season": season, "event": event, "session": session}
         if cause:
             details["cause"] = str(cause)
 
@@ -108,9 +108,9 @@ class ConfigurationError(F1VisualizerError):
         message: str = "Configuration error",
         setting: str | None = None,
         value: str | None = None,
-    ):
+    ) -> None:
         """Initialize with configuration context."""
-        details = {}
+        details: dict[str, object] = {}
         if setting:
             details["setting"] = setting
         if value:
@@ -127,9 +127,9 @@ class DataProcessingError(F1VisualizerError):
         message: str = "Data processing failed",
         step: str | None = None,
         row_count: int | None = None,
-    ):
+    ) -> None:
         """Initialize with processing context."""
-        details = {}
+        details: dict[str, object] = {}
         if step:
             details["step"] = step
         if row_count is not None:

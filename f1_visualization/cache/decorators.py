@@ -2,7 +2,8 @@
 
 import functools
 import logging
-from typing import Callable, ParamSpec, TypeVar
+from collections.abc import Callable
+from typing import ParamSpec, TypeVar
 
 import pandas as pd
 
@@ -32,7 +33,7 @@ def cached_dataframe(key_prefix: str = "", disk: bool = True) -> Callable:
         @functools.wraps(func)
         def wrapper(*args: P.args, **kwargs: P.kwargs) -> pd.DataFrame:
             # Generate cache key
-            key = cache_manager._generate_key(key_prefix, func.__name__, *args, **kwargs)
+            key = cache_manager.generate_key(key_prefix, func.__name__, *args, **kwargs)
 
             # Try to get from cache
             cached = cache_manager.get(key)
@@ -54,7 +55,7 @@ def cached_dataframe(key_prefix: str = "", disk: bool = True) -> Callable:
     return decorator
 
 
-def cached_result(key_prefix: str = "", ttl_seconds: int | None = None) -> Callable:
+def cached_result(key_prefix: str = "", _ttl_seconds: int | None = None) -> Callable:
     """
     Decorator to cache any function result using memory cache.
 
@@ -64,20 +65,20 @@ def cached_result(key_prefix: str = "", ttl_seconds: int | None = None) -> Calla
     """
 
     def decorator(func: Callable[P, R]) -> Callable[P, R]:
-        _cache: dict[str, R] = {}
+        memory_cache: dict[str, R] = {}
 
         @functools.wraps(func)
         def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
-            key = cache_manager._generate_key(key_prefix, func.__name__, *args, **kwargs)
+            key = cache_manager.generate_key(key_prefix, func.__name__, *args, **kwargs)
 
-            if key in _cache:
-                return _cache[key]
+            if key in memory_cache:
+                return memory_cache[key]
 
             result = func(*args, **kwargs)
-            _cache[key] = result
+            memory_cache[key] = result
             return result
 
-        wrapper.cache_clear = _cache.clear  # type: ignore[attr-defined]
+        wrapper.cache_clear = memory_cache.clear  # type: ignore[attr-defined]
         return wrapper
 
     return decorator

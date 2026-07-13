@@ -3,7 +3,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-
 compound_plot_explanation = dbc.Alert(
     [
         html.H4("Methodology", className="alert-heading"),

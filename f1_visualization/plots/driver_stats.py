@@ -18,12 +18,12 @@ from f1_visualization.data_loader import DF_DICT
 from f1_visualization.helpers import find_sc_laps, remove_low_data_drivers, teammate_comp_order
 from f1_visualization.plots.config import (
     deduplicate_legend_labels,
+    find_legend_order,
     get_plot_args,
     shade_sc_periods,
 )
 from f1_visualization.session import get_session_info
 
-logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -219,7 +219,7 @@ def driver_stats_lineplot(
             )
         else:
             sns.lineplot(driver_laps, x="LapNumber", y=y, ax=ax, errorbar=None, **driver_style)
-        
+
         last_lap = driver_laps["LapNumber"].max()
         last_pos = driver_laps[y][driver_laps["LapNumber"] == last_lap].iloc[0]
 
@@ -311,8 +311,6 @@ def driver_stats_distplot(
         )
 
     if swarm:
-        from f1_visualization.plots.config import find_legend_order
-        
         sns.swarmplot(
             data=included_laps,
             x="Driver",

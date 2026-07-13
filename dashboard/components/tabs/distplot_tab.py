@@ -5,7 +5,6 @@ from dash import dcc, html
 
 from dashboard.components.tabs.common import upper_bound_slider
 
-
 distplot_caveat = dbc.Alert(
     [
         html.H4("Caveats", className="alert-heading"),

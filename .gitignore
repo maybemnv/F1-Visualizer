@@ -144,3 +144,5 @@ cython_debug/
 profile_default/
 ipython_config.py
 uv.lock
+Data/grand_prix/
+Data/sprint/

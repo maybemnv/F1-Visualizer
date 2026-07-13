@@ -21,7 +21,6 @@ from f1_visualization.plots.config import (
 )
 from f1_visualization.session import get_session_info
 
-logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -101,9 +100,9 @@ def strategy_barplot(
 
 
 def _process_input(
-    seasons: int | Iterable[int],
+    seasons: Iterable[int],
     events: int | str | Iterable[str | int],
-    session_types: str | Iterable[str],
+    session_types: str | Iterable[str] | None,
     y: str,
     compounds: Iterable[str],
     x: str,
@@ -112,6 +111,7 @@ def _process_input(
 ) -> tuple[list[f.events.Event], list]:
     """Sanitize input parameters to compound plots."""
     compounds = [compound.upper() for compound in compounds]
+    seasons = list(seasons)
 
     for compound in compounds:
         assert compound in {"SOFT", "MEDIUM", "HARD"}, (
@@ -121,15 +121,13 @@ def _process_input(
     if x not in {"LapNumber", "TyreLife"}:
         logger.warning("Using %s as the x-axis is not recommended.", x)
 
+    events = [events] if isinstance(events, (int, str)) else list(events)
+
     if not absolute_compound and len(events) > 1:
         logger.warning("Different events may use different compounds under the same name!")
-
-    if isinstance(seasons, (int, str)):
-        seasons = [seasons]
-    if isinstance(events, (int, str)):
-        events = [events]
-    if isinstance(session_types, str):
-        session_types = [session_types]
+    if session_types is None:
+        session_types = ["R"] * len(seasons)
+    session_types = [session_types] if isinstance(session_types, str) else list(session_types)
 
     assert len(seasons) == len(events) == len(session_types)
 
@@ -166,11 +164,18 @@ def compounds_lineplot(
     """Visualize compound performances as a lineplot."""
     plt.style.use("dark_background")
 
-    if isinstance(seasons, int):
-        seasons = [seasons]
+    season_list = [seasons] if isinstance(seasons, int) else list(seasons)
+    compound_list = [compound.upper() for compound in compounds]
 
     event_objects, included_laps_list = _process_input(
-        seasons, events, session_types, y, compounds, x, upper_bound, absolute_compound
+        season_list,
+        events,
+        session_types,
+        y,
+        compound_list,
+        x,
+        upper_bound,
+        absolute_compound,
     )
 
     fig, axs = plt.subplots(
@@ -183,11 +188,11 @@ def compounds_lineplot(
     if len(event_objects) == 1:
         axs = [axs]
 
-    compounds_copy = compounds.copy()
+    compounds_copy = compound_list.copy()
 
     for idx, event in enumerate(event_objects):
         ax = axs[idx]
-        args = get_plot_args(seasons[idx], absolute_compound)
+        args = get_plot_args(season_list[idx], absolute_compound)
         included_laps = included_laps_list[idx]
         medians = included_laps.groupby([args.hue, x])[y].median(numeric_only=True)
 
@@ -195,7 +200,9 @@ def compounds_lineplot(
         event_name = event["EventName"]
 
         if absolute_compound:
-            compounds_copy = convert_compound_name(seasons[idx], round_number, compounds)
+            compounds_copy = list(
+                convert_compound_name(season_list[idx], round_number, compound_list)
+            )
 
         for compound in compounds_copy:
             if compound in medians.index:
@@ -211,8 +218,8 @@ def compounds_lineplot(
             else:
                 logger.warning(
                     "%s is not plotted for %s %s because there is not enough data",
-                    compounds[idx],
-                    seasons[idx],
+                    compound_list[idx],
+                    season_list[idx],
                     event_name,
                 )
 
@@ -230,12 +237,12 @@ def compounds_lineplot(
             framealpha=0.5,
         )
 
-        ax.set_title(label=f"{seasons[idx]} {event_name}", fontsize=12)
+        ax.set_title(label=f"{season_list[idx]} {event_name}", fontsize=12)
         ax.grid(which="both", axis="y")
         sns.despine(left=True, bottom=True)
 
-    compounds = [compounds[i] for i in find_legend_order(compounds)]
-    fig.suptitle(t=" VS ".join(compounds), fontsize=14)
+    compound_list = [compound_list[i] for i in find_legend_order(compound_list)]
+    fig.suptitle(t=" VS ".join(compound_list), fontsize=14)
 
     return fig
 
@@ -254,11 +261,18 @@ def compounds_distplot(
     """Visualize compound performance as a boxplot or violinplot."""
     plt.style.use("dark_background")
 
-    if isinstance(seasons, int):
-        seasons = [seasons]
+    season_list = [seasons] if isinstance(seasons, int) else list(seasons)
+    compound_list = [compound.upper() for compound in compounds]
 
     event_objects, included_laps_list = _process_input(
-        seasons, events, session_types, y, compounds, x, upper_bound, absolute_compound
+        season_list,
+        events,
+        session_types,
+        y,
+        compound_list,
+        x,
+        upper_bound,
+        absolute_compound,
     )
 
     x_ticks = max(laps[x].nunique() for laps in included_laps_list)
@@ -272,11 +286,11 @@ def compounds_distplot(
     if len(event_objects) == 1:
         axs = [axs]
 
-    compounds_copy = compounds.copy()
+    compounds_copy = compound_list.copy()
 
     for idx, event in enumerate(event_objects):
         ax = axs[idx]
-        args = get_plot_args(seasons[idx], absolute_compound)
+        args = get_plot_args(season_list[idx], absolute_compound)
         included_laps = included_laps_list[idx]
 
         plotted_compounds = included_laps[args.hue].unique()
@@ -284,14 +298,16 @@ def compounds_distplot(
         round_number = event["RoundNumber"]
 
         if absolute_compound:
-            compounds_copy = convert_compound_name(seasons[idx], round_number, compounds)
+            compounds_copy = list(
+                convert_compound_name(season_list[idx], round_number, compound_list)
+            )
 
         for compound in compounds_copy:
             if compound not in plotted_compounds:
                 logger.warning(
                     "%s is not plotted for %s %s because there is not enough data",
-                    compounds[idx],
-                    seasons[idx],
+                    compound_list[idx],
+                    season_list[idx],
                     event_name,
                 )
 
@@ -320,10 +336,10 @@ def compounds_distplot(
             framealpha=0.5,
         )
 
-        ax.set_title(label=f"{seasons[idx]} {event_name}", fontsize=12)
+        ax.set_title(label=f"{season_list[idx]} {event_name}", fontsize=12)
         sns.despine(left=True, bottom=True)
 
-    compounds = [compounds[i] for i in find_legend_order(compounds)]
-    fig.suptitle(t=" VS ".join(compounds), fontsize="16")
+    compound_list = [compound_list[i] for i in find_legend_order(compound_list)]
+    fig.suptitle(t=" VS ".join(compound_list), fontsize="16")
 
     return fig
