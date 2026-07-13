@@ -38,6 +38,11 @@ env
 .docs
 *.md
 !README.md
+README.md
+AGENTS.md
+SCHEMA.md
+Docs
+Comments
 
 # Cache (we use volumes for this)
 .cache
@@ -64,6 +69,15 @@ Jenkinsfile
 Automation
 *.sh
 Makefile
+readme_machine.py
+
+# Local project metadata and developer tooling
+.venv
+.cache
+logs
+pyproject.toml
+uv.lock
+.pre-commit-config.yaml
 
 # Misc
 *.bak
