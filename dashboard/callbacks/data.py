@@ -1,7 +1,7 @@
 """Data loading and processing callbacks."""
 
 from collections import Counter
-from typing import TypeAlias
+from typing import Any, TypeAlias, cast
 
 import pandas as pd
 from dash import Input, Output, State, callback
@@ -9,13 +9,10 @@ from dash import Input, Output, State, callback
 from dashboard.constants import MIN_COMPOUND_LAP_RATIO
 from dashboard.layout import line_y_options, scatter_y_options
 from dashboard.utils import df_convert_timedelta, style_compound_options
-from f1_visualization.visualization import get_session_info, load_laps
+from f1_visualization.data_loader import DF_DICT
+from f1_visualization.visualization import get_session_info
 
-# Type alias for session info tuple
-Session_info: TypeAlias = tuple[int, int, str, str, list[str], dict[str, int]]
-
-# Load data once at module level
-DF_DICT = load_laps()
+SessionInfo: TypeAlias = tuple[int, int, str, str, tuple[str, ...], dict[str, int]]
 
 
 @callback(
@@ -33,7 +30,7 @@ def get_session_metadata(
     event: str,
     session_name: str,
     teammate_comp: bool,
-) -> Session_info:
+) -> SessionInfo:
     """
     Store session metadata into browser cache.
 
@@ -44,10 +41,14 @@ def get_session_metadata(
     )
     event_name = f"{season} {event_name}"
 
-    starting_grid = {}
+    starting_grid: dict[str, int] = {}
     if pd.notna(session.results["GridPosition"]).all():
         starting_grid = dict(
-            zip(session.results["Abbreviation"], session.results["GridPosition"], strict=True)
+            zip(
+                [str(driver) for driver in session.results["Abbreviation"]],
+                [int(position) for position in session.results["GridPosition"]],
+                strict=True,
+            )
         )
 
     # This order enables calling f.get_session by unpacking the first three items
@@ -67,7 +68,7 @@ def get_session_laps(
     season: int,
     event: str,
     session_name: str,
-) -> dict:
+) -> dict[str, Any]:
     """
     Save the laps of the selected session into browser cache.
 
@@ -77,7 +78,7 @@ def get_session_laps(
     included_laps = included_laps[included_laps["EventName"] == event]
     included_laps = df_convert_timedelta(included_laps)
 
-    return included_laps.to_dict()
+    return cast("dict[str, Any]", included_laps.to_dict())
 
 
 @callback(
@@ -144,7 +145,7 @@ def after_laps_data_callback(included_laps: dict) -> str:
     Input("session-info", "data"),
     prevent_initial_call=True,
 )
-def update_session_data_store(session_info: Session_info | None) -> dict:
+def update_session_data_store(session_info: SessionInfo | None) -> dict:
     """Update session-data store for analysis tab."""
     if not session_info:
         return {}
@@ -158,4 +159,3 @@ def update_session_data_store(session_info: Session_info | None) -> dict:
         "drivers": drivers,
         "starting_grid": starting_grid,
     }
-

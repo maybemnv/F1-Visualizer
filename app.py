@@ -1,10 +1,17 @@
+"""Dash application entry point."""
+
 import warnings
+
 import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import Dash
+
 from config import HOST, PORT
 from dashboard.callbacks import register_callbacks
 from dashboard.layout import app_layout
+from f1_visualization.logging_config import setup_logging
+
+setup_logging()
 
 # Silent SettingWithCopyWarning
 pd.options.mode.chained_assignment = None

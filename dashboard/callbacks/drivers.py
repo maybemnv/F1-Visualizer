@@ -1,14 +1,13 @@
 """Driver-related callbacks."""
 
-from typing import TypeAlias
+from typing import Any, TypeAlias, cast
 
 import pandas as pd
 from dash import Input, Output, State, callback
 
 from dashboard.utils import add_gap
 
-# Type alias for session info tuple
-Session_info: TypeAlias = tuple[int, int, str, str, list[str], dict[str, int]]
+SessionInfo: TypeAlias = tuple[int, int, str, str, tuple[str, ...], dict[str, int]]
 
 
 @callback(
@@ -22,10 +21,10 @@ Session_info: TypeAlias = tuple[int, int, str, str, list[str], dict[str, int]]
     prevent_initial_call=True,
 )
 def set_driver_dropdowns(
-    session_info: Session_info,
+    session_info: SessionInfo,
 ) -> tuple[list[str], list[str], bool, list[str], list[str], bool]:
     """Configure driver dropdowns."""
-    drivers = session_info[4]
+    drivers = list(session_info[4])
     return drivers, drivers, False, drivers, [], False
 
 
@@ -52,11 +51,11 @@ def enable_add_gap(n_clicks: int) -> bool:
     ],
     prevent_initial_call=True,
 )
-def add_gap_to_driver(_: int, drivers: list[str], data: dict) -> dict:
+def add_gap_to_driver(_: int, drivers: list[str], data: dict) -> dict[str, Any]:
     """Amend the dataframe in cache and add driver gap columns."""
     laps = pd.DataFrame.from_dict(data)
     for driver in drivers:
         if f"GapTo{driver}" not in laps.columns:
             laps = add_gap(driver, laps)
 
-    return laps.to_dict()
+    return cast("dict[str, Any]", laps.to_dict())

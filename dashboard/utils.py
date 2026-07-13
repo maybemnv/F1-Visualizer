@@ -2,27 +2,28 @@
 
 from collections.abc import Iterable
 from contextlib import suppress
-from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TypeAlias
 
 import pandas as pd
-import tomli
 from dash import html
 
 from dashboard.constants import COMPOUND_ORDER
+from f1_visualization.consts import VISUAL_CONFIG
+from f1_visualization.helpers import add_gap
 
-if TYPE_CHECKING:
-    from f1_visualization.preprocess import DFDict
+LapDataBySeason: TypeAlias = dict[int, dict[str, pd.DataFrame]]
+COMPOUND_PALETTE = VISUAL_CONFIG["relative"]["high_contrast_palette"]
 
-# Load compound palette for styling
-with open(
-    Path(__file__).absolute().parent / "visualization_config.toml",
-    "rb",
-) as toml:
-    COMPOUND_PALETTE = tomli.load(toml)["relative"]["high_contrast_palette"]
+__all__ = [
+    "add_gap",
+    "configure_lap_numbers_slider",
+    "df_convert_timedelta",
+    "get_last_available_round",
+    "style_compound_options",
+]
 
 
-def get_last_available_round(df_dict: "DFDict", season: int) -> tuple[int, int]:
+def get_last_available_round(df_dict: LapDataBySeason, season: int) -> tuple[int, int]:
     """
     Get the last available sprint and race round number in a given season.
 
@@ -70,34 +71,6 @@ def df_convert_timedelta(df: pd.DataFrame) -> pd.DataFrame:
     for column in timedelta_columns:
         df[column] = df[column].dt.total_seconds()
     return df
-
-
-def add_gap(driver: str, df_laps: pd.DataFrame) -> pd.DataFrame:
-    """
-    Calculate the gap to a certain driver.
-
-    Compared to the implementation in visualization.py, here we assume
-    that the Time column has been converted to float type and that df_laps
-    contains laps from one round only.
-
-    Args:
-        driver: Three-letter driver abbreviation.
-        df_laps: DataFrame containing lap data.
-
-    Returns:
-        DataFrame with added GapTo{driver} column.
-    """
-    df_driver = df_laps[df_laps["Driver"] == driver][["LapNumber", "Time"]]
-    timing_column_name = f"{driver}Time"
-    df_driver = df_driver.rename(columns={"Time": timing_column_name})
-
-    df_laps = df_laps.merge(df_driver, how="left", on="LapNumber", validate="many_to_one")
-    gap = df_laps["Time"] - df_laps[timing_column_name]
-    if pd.api.types.is_timedelta64_dtype(gap):
-        gap = gap.dt.total_seconds()
-    df_laps[f"GapTo{driver}"] = gap
-
-    return df_laps.drop(columns=timing_column_name)
 
 
 def configure_lap_numbers_slider(data: dict) -> tuple[int, list[int], dict[int, str]]:

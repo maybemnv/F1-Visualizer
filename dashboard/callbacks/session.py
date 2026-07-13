@@ -5,10 +5,7 @@ from dash import Input, Output, State, callback
 
 from dashboard.utils import get_last_available_round
 from f1_visualization.consts import SPRINT_FORMATS
-from f1_visualization.visualization import load_laps
-
-# Load data once at module level
-DF_DICT = load_laps()
+from f1_visualization.data_loader import DF_DICT
 
 
 @callback(
@@ -32,7 +29,7 @@ def set_season_options(_: str) -> list[int]:
 )
 def set_event_options(
     season: int | None, old_event: str | None
-) -> tuple[list[str], None, dict, int, int]:
+) -> tuple[list[str], str | None, dict, int, int]:
     """Get the names of all events in the selected season."""
     if season is None:
         return [], None, {}, 0, 0

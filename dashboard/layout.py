@@ -3,7 +3,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from dashboard.components import add_gap_row, external_links, session_picker_row
+from dashboard.components import add_gap_row, session_picker_row
 from dashboard.components.tabs import (
     analysis_tab,
     compound_plot_tab,
@@ -17,7 +17,7 @@ from dashboard.components.tabs import (
 )
 
 # Re-export y_options for backward compatibility with callbacks
-__all__ = ["app_layout", "scatter_y_options", "line_y_options"]
+__all__ = ["app_layout", "line_y_options", "scatter_y_options"]
 
 # Store for session data (used by analysis callbacks)
 session_data_store = dcc.Store(id="session-data", data={})
@@ -88,38 +88,36 @@ session_controls = dbc.Card(
             html.H5("Session Selection", className="mb-0"),
             className="bg-primary text-white",
         ),
-        dbc.CardBody(
-            [
-                session_picker_row,
-                html.Hr(),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            [
-                                dbc.Label("Drivers", className="fw-semibold"),
-                                dcc.Loading(
-                                    dcc.Dropdown(
-                                        options=[],
-                                        value=[],
-                                        placeholder="Select drivers",
-                                        disabled=True,
-                                        multi=True,
-                                        id="drivers",
-                                    ),
-                                    type="circle",
+        dbc.CardBody([
+            session_picker_row,
+            html.Hr(),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            dbc.Label("Drivers", className="fw-semibold"),
+                            dcc.Loading(
+                                dcc.Dropdown(
+                                    options=[],
+                                    value=[],
+                                    placeholder="Select drivers",
+                                    disabled=True,
+                                    multi=True,
+                                    id="drivers",
                                 ),
-                            ],
-                            md=8,
-                        ),
-                        dbc.Col(
-                            add_gap_row,
-                            md=4,
-                        ),
-                    ],
-                    className="mt-3",
-                ),
-            ]
-        ),
+                                type="circle",
+                            ),
+                        ],
+                        md=8,
+                    ),
+                    dbc.Col(
+                        add_gap_row,
+                        md=4,
+                    ),
+                ],
+                className="mt-3",
+            ),
+        ]),
     ],
     className="mb-4 shadow-sm",
 )
@@ -174,7 +172,8 @@ footer = html.Footer(
                                 className="d-flex align-items-center mb-2",
                             ),
                             html.P(
-                                "Interactive Formula 1 race data visualization and analysis platform.",
+                                "Interactive Formula 1 race data visualization and "
+                                "analysis platform.",
                                 className="text-muted small mb-0",
                             ),
                         ],
@@ -204,7 +203,10 @@ footer = html.Footer(
                                     html.Li(
                                         html.A(
                                             "Data Schema",
-                                            href="https://github.com/maybemnv/F1-Visualizer/blob/master/SCHEMA.md",
+                                            href=(
+                                                "https://github.com/maybemnv/F1-Visualizer/"
+                                                "blob/master/Docs/SCHEMA.md"
+                                            ),
                                             target="_blank",
                                         )
                                     ),
@@ -282,17 +284,15 @@ footer = html.Footer(
 )
 
 # Hidden stores and sequencer
-stores = html.Div(
-    [
-        dcc.Store(id="event-schedule"),
-        dcc.Store(id="session-info"),
-        dcc.Store(id="last-race-round"),
-        dcc.Store(id="last-sprint-round"),
-        dcc.Store(id="laps"),
-        session_data_store,
-        html.Span(id="laps-data-sequencer", hidden=True),
-    ]
-)
+stores = html.Div([
+    dcc.Store(id="event-schedule"),
+    dcc.Store(id="session-info"),
+    dcc.Store(id="last-race-round"),
+    dcc.Store(id="last-sprint-round"),
+    dcc.Store(id="laps"),
+    session_data_store,
+    html.Span(id="laps-data-sequencer", hidden=True),
+])
 
 # Main layout
 app_layout = html.Div(

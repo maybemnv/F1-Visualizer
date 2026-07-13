@@ -6,8 +6,7 @@ from dash import Input, Output, State, callback
 
 from dashboard.utils import configure_lap_numbers_slider
 
-# Type alias for session info tuple
-Session_info: TypeAlias = tuple[int, int, str, str, list[str], dict[str, int]]
+SessionInfo: TypeAlias = tuple[int, int, str, str, tuple[str, ...], dict[str, int]]
 
 
 @callback(
@@ -40,7 +39,7 @@ def set_lineplot_slider(data: dict) -> tuple[int, list[int], dict[int, str]]:
     State("show-starting-grid", "value"),
 )
 def set_starting_grid_switch(
-    y: str, session_info: Session_info, current_setting: list | None
+    y: str, session_info: SessionInfo, current_setting: list | None
 ) -> tuple[list[dict], list | None]:
     """
     Enable show starting grid switch only when y-axis is position.

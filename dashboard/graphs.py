@@ -14,7 +14,8 @@ from plotly.subplots import make_subplots
 from f1_visualization.annotations import PlotArgs, Session
 from f1_visualization.visualization import find_sc_laps
 
-with open(Path(__file__).absolute().parent / "visualization_config.toml", "rb") as toml:
+config_path = Path(__file__).absolute().parents[1] / "Data" / "visualization_config.toml"
+with open(config_path, "rb") as toml:
     DASH_VISUAL_CONFIG = tomli.load(toml)
 
 
@@ -23,7 +24,7 @@ def _plot_args() -> PlotArgs:
     return PlotArgs(
         "Compound",
         DASH_VISUAL_CONFIG["relative"]["palette"],
-        DASH_VISUAL_CONFIG["relative"]["markers"],
+        DASH_VISUAL_CONFIG["relative"]["plotly_markers"],
         DASH_VISUAL_CONFIG["relative"]["labels"],
     )
 
@@ -83,15 +84,14 @@ def strategy_barplot(
     # so we need to reverse the list of the drivers to get them ordered by finishing position
     for driver in reversed(drivers):
         stints = driver_stints.loc[driver_stints["Driver"] == driver]
-        stint_num = 1
-        for _, stint in stints.iterrows():
+        for stint_num, (_, stint) in enumerate(stints.iterrows(), start=1):
             fig.add_trace(
                 go.Bar(
                     y=[driver],
                     x=[stint["StintLength"]],
                     orientation="h",
                     marker={"color": args.palette[stint[args.hue]]},
-                    marker_pattern_shape=DASH_VISUAL_CONFIG["fresh"]["hatch"][
+                    marker_pattern_shape=DASH_VISUAL_CONFIG["fresh"]["plotly_hatch"][
                         stint["FreshTyre"]
                     ],
                     name=(
@@ -100,8 +100,6 @@ def strategy_barplot(
                     ),
                 )
             )
-            stint_num += 1
-
     num_laps = included_laps["LapNumber"].max()
     fig = shade_sc_periods(fig, *find_sc_laps(included_laps))
     fig.update_layout(
@@ -165,7 +163,7 @@ def stats_scatterplot(
                 marker={
                     "color": driver_laps[args.hue].map(args.palette),
                     "symbol": driver_laps["FreshTyre"].map(
-                        DASH_VISUAL_CONFIG["fresh"]["markers"]
+                        DASH_VISUAL_CONFIG["fresh"]["plotly_markers"]
                     ),
                 },
                 name=driver,
@@ -329,13 +327,13 @@ def compounds_lineplot(included_laps: pd.DataFrame, y: str, compounds: list[str]
         # use the max instead of the length because tyre life range is
         # not guaranteed to start at 0
         max_stint_length = max(max_stint_length, tyre_life_range.max())
-        median_LRT = compound_laps.groupby("TyreLife")[y].median()  # noqa: N806
-        median_LRT = median_LRT.loc[tyre_life_range]  # noqa: N806
+        median_lrt = compound_laps.groupby("TyreLife")[y].median()
+        median_lrt = median_lrt.loc[tyre_life_range]
 
         fig.add_trace(
             go.Scatter(
                 x=tyre_life_range,
-                y=median_LRT,
+                y=median_lrt,
                 line={"color": palette[compound]},
                 marker={
                     "line": {"width": 1, "color": "white"},
