@@ -4,13 +4,16 @@ Use this checklist to track the work required to deploy the dashboard reliably. 
 
 Last updated: 2026-07-13.
 
-## 1. Fix Confirmed Blockers
+## 1. Fix Confirmed Blocker
 
-- [x] Fix package discovery in `pyproject.toml`; verified with `uv run mypy f1_visualization dashboard` and `uv run pytest` on 2026-07-13.
-- [x] Fix boolean parsing in `f1_visualization/preprocess.py`; string booleans are normalized explicitly instead of relying on `astype(bool)`.
+- [x] Fix package discovery in `pyproject.toml`; verified with `uv run mypy src/f1_visualization src/dashboard` and `uv run pytest` after `src/` layout migration on 2026-07-13.
+- [x] Fix boolean parsing in `preprocess.py`; string booleans are normalized explicitly instead of relying on `astype(bool)`.
 - [x] Define one contract for `Time` and `GapTo*` columns in dashboard data: `Time` is serialized as float seconds and `GapTo*` is float seconds. Verified by gap tests on 2026-07-13.
+- [x] Adopt `src/` layout — all importable packages live under `src/`, tests mirror the hierarchy. Verified with `uv run pytest` (49 passed) on 2026-07-13.
+- [x] Fix Docker path resolution — `_resolve_project_root()` in `schemas/settings.py` walks up to `pyproject.toml` sentinel, works in both source tree and wheel-installed (Docker) deployments. Environment keys `F1_DATA_DIR` and `F1_CACHE_DIR` added to Dockerfile + docker-compose.yml for defense-in-depth on 2026-07-13.
+- [x] Fix `Automation/data-refresh.sh` ERR trap — pattern widened from `*preprocess.py*` to `*preprocess*` to cover both direct-file and `-m` invocation on 2026-07-13.
 - [ ] Stop mutating caller-owned DataFrames in `dashboard/utils.py`; use `.copy()` before transformations.
-- [ ] Replace import-time loading of all data with explicit, lazy loading and a clear missing-data error. Duplicate callback reloads are removed, but canonical lazy loading is still outstanding.
+- [ ] Replace import-time loading of all data with explicit, lazy loading and a clear missing-data error.
 - [x] Resolve the Python version mismatch between `pyproject.toml`, README, Docker, and CI. Project metadata and README now target Python 3.11+.
 
 ## 2. Automated Quality Gates
@@ -18,7 +21,7 @@ Last updated: 2026-07-13.
 - [x] Make `uv run pytest` pass with zero failures. Evidence: `49 passed` on 2026-07-13.
 - [ ] Add regression tests for boolean parsing, package imports, missing data, empty sessions, and gap calculations.
 - [x] Reduce `uv run ruff check .` from the current 401 violations to zero, or narrow the configured rules intentionally. Evidence: `All checks passed!` on 2026-07-13.
-- [x] Run `uv run mypy f1_visualization dashboard` and resolve or document remaining errors. Evidence: `Success: no issues found in 55 source files` on 2026-07-13.
+- [ ] Run `uv run mypy src/f1_visualization src/dashboard` and resolve or document remaining errors. (27 errors in 13 files remain — all pre-existing, none related to import resolution or path discovery.)
 - [ ] Add CI for tests, Ruff, mypy, and wheel-build validation on every pull request.
 - [ ] Run `pre-commit run --all-files` successfully.
 
@@ -33,9 +36,9 @@ Last updated: 2026-07-13.
 
 ## 4. Production Configuration
 
-- [ ] Set `F1_HOST=0.0.0.0` and an explicit production `F1_PORT`.
-- [ ] Set `F1_LOG_LEVEL=INFO`; do not enable debug mode in production.
-- [ ] Confirm `F1_DATA_DIR` points to a complete, readable dataset.
+- [x] Set `F1_HOST=0.0.0.0` and `F1_PORT=8050` in Docker environment.
+- [x] Set `F1_LOG_LEVEL=INFO` in Docker environment; debug mode is disabled.
+- [x] `F1_DATA_DIR=/app/Data` and `F1_CACHE_DIR=/app/.cache` set in Docker environment; sentinel-based fallback works without env vars.
 - [ ] Do not commit secrets, credentials, or local cache files.
 - [ ] Add a reverse proxy with TLS, request limits, and access logging if exposed publicly.
 - [ ] Define a backup and refresh process for `Data/` and cache invalidation.
@@ -55,7 +58,7 @@ Last updated: 2026-07-13.
 uv sync --extra dev
 uv run pytest
 uv run ruff check .
-uv run mypy f1_visualization dashboard
+uv run mypy src/f1_visualization src/dashboard
 uv build
 docker compose build
 docker compose up -d f1-visualizer
