@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python dependencies
 COPY pyproject.toml .
+COPY f1_visualization ./f1_visualization
+COPY dashboard ./dashboard
+COPY app.py config.py ./
 RUN pip install --no-cache-dir build && \
     pip wheel --no-cache-dir --wheel-dir /wheels .
 

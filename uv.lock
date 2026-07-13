@@ -557,7 +557,7 @@ requires-dist = [
     { name = "click", specifier = ">=8.0.0" },
     { name = "dash", specifier = ">=3.0.0" },
     { name = "dash-bootstrap-components", specifier = ">=2.0.0" },
-    { name = "fastf1", specifier = ">=3.6.0" },
+    { name = "fastf1", specifier = ">=3.8.2" },
     { name = "matplotlib", specifier = ">=3.7.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
     { name = "numpy", specifier = ">=2.0.0" },
@@ -584,7 +584,7 @@ provides-extras = ["performance", "dev"]
 
 [[package]]
 name = "fastf1"
-version = "3.7.0"
+version = "3.8.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
@@ -592,6 +592,7 @@ dependencies = [
     { name = "numpy" },
     { name = "pandas" },
     { name = "platformdirs" },
+    { name = "pydantic" },
     { name = "pyjwt" },
     { name = "python-dateutil" },
     { name = "rapidfuzz" },
@@ -602,9 +603,9 @@ dependencies = [
     { name = "timple" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f9/65/83a948a8b5f2c2657706756f6e33457cddd08a11b47624af9cff54a9e5a1/fastf1-3.7.0.tar.gz", hash = "sha256:db53efd030cffda109ba357b86e68e56d1eaa975b4dee10560dbee265c55e78e", size = 132980, upload-time = "2025-11-27T21:56:13.112Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f9/8f/3281f9add386bcd7f20f2f487917d5dc2422ec32581b22ec42a5a5c8a670/fastf1-3.8.3.tar.gz", hash = "sha256:9277e1a759debfcf63e65c248b9d440c561724147512fd5e95115dd8a71ac350", size = 137053, upload-time = "2026-04-29T21:24:04.164Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/28/46/d83e255fe78c4a14d7b9fce8fb61b44be66be5be0cb9f37b27f1aeaf68d3/fastf1-3.7.0-py3-none-any.whl", hash = "sha256:ef7acdc7018bcab530d3bd8709c59aca1f9797139eabcc2b2b0f5554ad6ea30a", size = 137991, upload-time = "2025-11-27T21:56:11.629Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/7b/fd211595db7d433c7180184559e5c1aad5621a964fc1c8724218fa3690d5/fastf1-3.8.3-py3-none-any.whl", hash = "sha256:e3270f6d60838662dd3e15cf6236519228a7fcfcc009f5edb195798769c845ad", size = 135960, upload-time = "2026-04-29T21:24:01.912Z" },
 ]
 
 [[package]]

@@ -41,8 +41,8 @@ dev = [
 requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["f1_visualization", "dashboard"]
+[tool.setuptools.packages.find]
+include = ["f1_visualization*", "dashboard*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
