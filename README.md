@@ -83,7 +83,7 @@ F1-Visualizer/
 ├── config.py                 # Pydantic-backed configuration
 ├── pyproject.toml            # Project metadata & tool config
 ├── AGENTS.md                 # Guidelines for AI-assisted development
-├── SCHEMA.md                 # CSV column definitions
+├── Docs/SCHEMA.md            # CSV column definitions
 ├── Assets/                   # Static assets (CSS, images)
 ├── Automation/               # Deployment and data-refresh scripts
 ├── Comments/                 # Design notes and documentation
@@ -95,7 +95,6 @@ F1-Visualizer/
 │   ├── constants.py          # Plot dimensions & magic numbers
 │   ├── utils.py              # UI helper utilities
 │   ├── async_loader.py       # Async data loading
-│   ├── visualization_config.toml  # Dashboard-specific defaults
 │   ├── callbacks/            # Dash callback handlers
 │   └── components/           # Reusable UI components
 ├── f1_visualization/
@@ -133,7 +132,7 @@ All data is sourced from the [FastF1](https://github.com/theOehrly/Fast-F1) pack
 
 ### Schema
 
-Refer to `SCHEMA.md` for detailed column definitions in the processed data files.
+Refer to `Docs/SCHEMA.md` for detailed column definitions in the processed data files.
 
 ---
 

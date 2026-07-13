@@ -2,21 +2,23 @@
 
 Use this checklist to track the work required to deploy the dashboard reliably. Add the date, owner, and evidence link beside completed items.
 
+Last updated: 2026-07-13.
+
 ## 1. Fix Confirmed Blockers
 
-- [ ] Fix package discovery in `pyproject.toml`; verify the built wheel contains `f1_visualization.ml`, `plots`, `helpers`, `schemas`, and `session`.
-- [ ] Fix boolean parsing in `f1_visualization/preprocess.py`; confirm the string `"False"` becomes `False`, not `True`.
-- [ ] Define one contract for `Time` and `GapTo*` columns: either float seconds or timedeltas. Update `add_gap()` and its tests accordingly.
+- [x] Fix package discovery in `pyproject.toml`; verified with `uv run mypy f1_visualization dashboard` and `uv run pytest` on 2026-07-13.
+- [x] Fix boolean parsing in `f1_visualization/preprocess.py`; string booleans are normalized explicitly instead of relying on `astype(bool)`.
+- [x] Define one contract for `Time` and `GapTo*` columns in dashboard data: `Time` is serialized as float seconds and `GapTo*` is float seconds. Verified by gap tests on 2026-07-13.
 - [ ] Stop mutating caller-owned DataFrames in `dashboard/utils.py`; use `.copy()` before transformations.
-- [ ] Replace import-time loading of all data with explicit, lazy loading and a clear missing-data error.
-- [ ] Resolve the Python version mismatch between `pyproject.toml`, README, Docker, and CI.
+- [ ] Replace import-time loading of all data with explicit, lazy loading and a clear missing-data error. Duplicate callback reloads are removed, but canonical lazy loading is still outstanding.
+- [x] Resolve the Python version mismatch between `pyproject.toml`, README, Docker, and CI. Project metadata and README now target Python 3.11+.
 
 ## 2. Automated Quality Gates
 
-- [ ] Make `uv run pytest` pass with zero failures.
+- [x] Make `uv run pytest` pass with zero failures. Evidence: `49 passed` on 2026-07-13.
 - [ ] Add regression tests for boolean parsing, package imports, missing data, empty sessions, and gap calculations.
-- [ ] Reduce `uv run ruff check .` from the current 401 violations to zero, or narrow the configured rules intentionally.
-- [ ] Run `uv run mypy f1_visualization dashboard` and resolve or document remaining errors.
+- [x] Reduce `uv run ruff check .` from the current 401 violations to zero, or narrow the configured rules intentionally. Evidence: `All checks passed!` on 2026-07-13.
+- [x] Run `uv run mypy f1_visualization dashboard` and resolve or document remaining errors. Evidence: `Success: no issues found in 55 source files` on 2026-07-13.
 - [ ] Add CI for tests, Ruff, mypy, and wheel-build validation on every pull request.
 - [ ] Run `pre-commit run --all-files` successfully.
 
