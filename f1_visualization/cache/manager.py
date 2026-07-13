@@ -3,8 +3,7 @@
 import hashlib
 import logging
 import pickle
-from datetime import datetime, timedelta, timezone
-from functools import lru_cache
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -28,7 +27,7 @@ class CacheManager:
         cache_dir: Path | None = None,
         memory_size: int | None = None,
         disk_ttl_hours: int | None = None,
-    ):
+    ) -> None:
         """
         Initialize cache manager.
 
@@ -59,7 +58,11 @@ class CacheManager:
     def _generate_key(self, *args: Any, **kwargs: Any) -> str:
         """Generate a unique cache key from arguments."""
         key_data = str(args) + str(sorted(kwargs.items()))
-        return hashlib.md5(key_data.encode()).hexdigest()  # noqa: S324
+        return hashlib.md5(key_data.encode()).hexdigest()
+
+    def generate_key(self, *args: Any, **kwargs: Any) -> str:
+        """Generate a public cache key for decorators and callers."""
+        return self._generate_key(*args, **kwargs)
 
     def _get_disk_path(self, key: str) -> Path:
         """Get disk cache file path for a key."""
@@ -71,8 +74,8 @@ class CacheManager:
         if not path.exists():
             return False
 
-        mtime = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
-        age = datetime.now(tz=timezone.utc) - mtime
+        mtime = datetime.fromtimestamp(path.stat().st_mtime, tz=UTC)
+        age = datetime.now(tz=UTC) - mtime
         return age < self._disk_ttl
 
     def _evict_lru(self) -> None:
@@ -109,7 +112,7 @@ class CacheManager:
                     data = pd.read_parquet(disk_path)
                 else:
                     with open(disk_path, "rb") as f:
-                        data = pickle.load(f)  # noqa: S301
+                        data = pickle.load(f)
 
                 # Promote to memory cache
                 self._set_memory(key, data)
@@ -229,11 +232,3 @@ class CacheManager:
 
 # Global cache manager instance
 cache_manager = CacheManager()
-
-
-@lru_cache(maxsize=256)
-def cached_session_info(season: int, event: str, session_type: str) -> tuple:
-    """LRU-cached wrapper for session info lookups."""
-    from f1_visualization.session import get_session_info
-
-    return get_session_info(season, event, session_type)

@@ -2,8 +2,9 @@
 
 import logging
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
 import fastf1 as f
 import numpy as np
@@ -25,7 +26,6 @@ from f1_visualization.consts import (
     VISUAL_CONFIG,
 )
 
-logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -238,7 +238,9 @@ def load_laps() -> defaultdict[int, defaultdict[str, pd.DataFrame]]:
             2022: {R: {"all": df, "transformed": df}}
         }
     """
-    df_dict = defaultdict(lambda: defaultdict(defaultdict))
+    df_dict: defaultdict[int, defaultdict[str, dict[str, pd.DataFrame]]] = defaultdict(
+        lambda: defaultdict(dict)
+    )
 
     for file in DATA_PATH.glob("**/*.csv"):
         season, session, data_type = parse_csv_path(file)
@@ -334,11 +336,13 @@ def add_compound_name(
 
         try:
             if row.loc["Compound"] not in compound_to_index:
-                return row.loc["Compound"]
+                return str(row.loc["Compound"])
 
-            return season_selection[str(row.loc["RoundNumber"])][
-                compound_to_index[row.loc["Compound"]]
-            ]
+            return str(
+                season_selection[str(row.loc["RoundNumber"])][
+                    compound_to_index[row.loc["Compound"]]
+                ]
+            )
         except KeyError as exc:
             # error handling for when compound_selection.toml is not up-to-date
             raise OutdatedTOMLError(
@@ -385,11 +389,13 @@ def convert_compound(df_laps: pd.DataFrame) -> pd.DataFrame:
 
         try:
             if row.loc["Compound"] not in VISUAL_CONFIG["slick_names"]["18"]:
-                return row.loc["Compound"]
+                return str(row.loc["Compound"])
 
-            return index_to_compound[
-                compounds_2018[str(row.loc["RoundNumber"])].index(row.loc["Compound"])
-            ]
+            return str(
+                index_to_compound[
+                    compounds_2018[str(row.loc["RoundNumber"])].index(row.loc["Compound"])
+                ]
+            )
         except KeyError as exc:
             # error handling for when compound_selection.toml is not up-to-date
             raise OutdatedTOMLError(
@@ -638,7 +644,7 @@ def get_last_round(session_cutoff: int = GRAND_PRIX_ORDINAL) -> int:
     # Datetime64 objects should be considered to be UTC and therefore have an offset of +0000
     #
     # This is our use case and the warning can be ignored
-    api_available = np.datetime64(datetime.now(timezone.utc))
+    api_available = np.datetime64(datetime.now(UTC))
 
     rounds_completed = current_schedule[
         current_schedule[f"Session{session_cutoff}DateUtc"] <= api_available
@@ -647,7 +653,7 @@ def get_last_round(session_cutoff: int = GRAND_PRIX_ORDINAL) -> int:
     if pd.isna(rounds_completed):
         rounds_completed = 0
 
-    return rounds_completed
+    return cast("int", rounds_completed)
 
 
 def transform(season: int, dfs: dict[str, pd.DataFrame], session_type: str) -> None:

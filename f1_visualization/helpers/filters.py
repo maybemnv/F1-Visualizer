@@ -1,17 +1,17 @@
 """Data filtering and safety car detection helpers."""
 
 import logging
+from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
 
-logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
 
 def remove_low_data_drivers(
-    included_laps: pd.DataFrame, drivers: tuple[str], min_laps: int
-) -> tuple[str]:
+    included_laps: pd.DataFrame, drivers: Sequence[str], min_laps: int
+) -> tuple[str, ...]:
     """
     Return drivers who appear at least min_laps times in included_laps.
 
@@ -29,8 +29,8 @@ def remove_low_data_drivers(
 
 
 def teammate_comp_order(
-    included_laps: pd.DataFrame, drivers: tuple[str], by: str
-) -> tuple[str]:
+    included_laps: pd.DataFrame, drivers: Sequence[str], by: str
+) -> tuple[str, ...]:
     """
     Reorder teammates by the median gap in some metric in descending order.
 

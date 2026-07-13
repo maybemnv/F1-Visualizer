@@ -16,24 +16,24 @@ class DriverFeatures:
     driver: str
     season: int
     round_number: int
-    
+
     # Pace metrics
     median_lap_time: float
     lap_time_std: float  # Consistency
     fastest_lap: float
     slowest_lap: float
-    
+
     # Position metrics
     start_position: int
     finish_position: int
     positions_gained: int
     avg_position: float
-    
+
     # Tyre metrics
     num_stints: int
     avg_stint_length: float
     total_laps: int
-    
+
     # Performance ratios
     pct_from_fastest: float
     consistency_score: float  # Lower is better
@@ -91,8 +91,10 @@ def extract_driver_features(
     fastest_overall = df_laps[
         (df_laps["RoundNumber"] == round_number) & (df_laps["IsAccurate"])
     ]["LapTime"].min()
-    
-    pct_from_fastest = ((median_lap - fastest_overall) / fastest_overall * 100) if fastest_overall > 0 else 0
+
+    pct_from_fastest = (
+        ((median_lap - fastest_overall) / fastest_overall * 100) if fastest_overall > 0 else 0
+    )
 
     # Consistency score (coefficient of variation)
     consistency = (lap_std / median_lap * 100) if median_lap > 0 else 100

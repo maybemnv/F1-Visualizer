@@ -1,4 +1,5 @@
-"""Plotting functions and other visualization helpers.
+"""
+Plotting functions and other visualization helpers.
 
 This module maintains backward compatibility by re-exporting functions
 from the new modular structure.

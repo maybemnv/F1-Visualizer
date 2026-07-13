@@ -4,7 +4,6 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 
-import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
@@ -38,7 +37,7 @@ class ClusterResult:
 class DrivingStyleClusterer:
     """K-Means based driving style clusterer."""
 
-    def __init__(self, n_clusters: int = 4, random_state: int = 42):
+    def __init__(self, n_clusters: int = 4, random_state: int = 42) -> None:
         """
         Initialize clusterer.
 
@@ -64,7 +63,7 @@ class DrivingStyleClusterer:
             Self for chaining
         """
         X, feature_names = get_feature_matrix(features_df)
-        
+
         if len(X) < self.n_clusters:
             logger.warning("Not enough samples for %d clusters", self.n_clusters)
             return self
@@ -80,12 +79,12 @@ class DrivingStyleClusterer:
         self._model.fit(X)
 
         # Label clusters based on centroid characteristics
-        self._label_clusters(X, features_df)
+        self._label_clusters()
 
         logger.info("Clusterer fitted with %d clusters", self.n_clusters)
         return self
 
-    def _label_clusters(self, X: np.ndarray, features_df: pd.DataFrame) -> None:
+    def _label_clusters(self) -> None:
         """Assign driving style labels to clusters based on characteristics."""
         if self._model is None:
             return
@@ -93,9 +92,21 @@ class DrivingStyleClusterer:
         centroids = self._model.cluster_centers_
 
         # Find feature indices
-        consistency_idx = self._feature_names.index("consistency_score") if "consistency_score" in self._feature_names else -1
-        positions_idx = self._feature_names.index("positions_gained") if "positions_gained" in self._feature_names else -1
-        pace_idx = self._feature_names.index("pct_from_fastest") if "pct_from_fastest" in self._feature_names else -1
+        consistency_idx = (
+            self._feature_names.index("consistency_score")
+            if "consistency_score" in self._feature_names
+            else -1
+        )
+        positions_idx = (
+            self._feature_names.index("positions_gained")
+            if "positions_gained" in self._feature_names
+            else -1
+        )
+        pace_idx = (
+            self._feature_names.index("pct_from_fastest")
+            if "pct_from_fastest" in self._feature_names
+            else -1
+        )
 
         style_scores = []
         for i, centroid in enumerate(centroids):
@@ -130,7 +141,12 @@ class DrivingStyleClusterer:
 
         # Assign styles greedily
         assigned_styles = set()
-        styles = [DrivingStyle.AGGRESSIVE, DrivingStyle.CONSISTENT, DrivingStyle.STRATEGIC, DrivingStyle.QUALIFIER]
+        styles = [
+            DrivingStyle.AGGRESSIVE,
+            DrivingStyle.CONSISTENT,
+            DrivingStyle.STRATEGIC,
+            DrivingStyle.QUALIFIER,
+        ]
 
         for style in styles:
             style_key = style.value.lower()
@@ -166,7 +182,7 @@ class DrivingStyleClusterer:
             return []
 
         X, _ = get_feature_matrix(features_df)
-        
+
         if len(X) == 0:
             return []
 

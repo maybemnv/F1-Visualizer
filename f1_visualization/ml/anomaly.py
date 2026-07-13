@@ -40,7 +40,7 @@ class PerformanceAnomalyDetector:
         self,
         contamination: float = 0.1,
         random_state: int = 42,
-    ):
+    ) -> None:
         """
         Initialize anomaly detector.
 
@@ -101,7 +101,7 @@ class PerformanceAnomalyDetector:
         if not feature_cols:
             return np.array([])
 
-        return df_laps[feature_cols].dropna().values
+        return np.asarray(df_laps[feature_cols].dropna().to_numpy())
 
     def detect(self, df_laps: pd.DataFrame) -> list[AnomalyResult]:
         """
@@ -118,7 +118,7 @@ class PerformanceAnomalyDetector:
             return []
 
         df = df_laps.copy()
-        
+
         # Extract features
         median_time = df["LapTime"].median() if "LapTime" in df.columns else 0
         if "LapTime" in df.columns:
@@ -181,9 +181,9 @@ class PerformanceAnomalyDetector:
         lap_time = row.get("LapTime", median_time)
         position_change = row.get("PositionChange", 0)
 
-        if lap_time < median_time * 0.97:  # noqa: PLR2004
+        if lap_time < median_time * 0.97:
             return AnomalyType.UNUSUALLY_FAST
-        if lap_time > median_time * 1.05:  # noqa: PLR2004
+        if lap_time > median_time * 1.05:
             return AnomalyType.UNUSUALLY_SLOW
         if position_change < -3:  # noqa: PLR2004
             return AnomalyType.UNEXPECTED_POSITION_GAIN

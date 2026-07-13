@@ -10,7 +10,12 @@ from f1_visualization.schemas.session_info import (
     EventScheduleSchema,
     SessionInfoSchema,
 )
-from f1_visualization.schemas.settings import AppSettings, CacheSettings, cache_settings, settings
+from f1_visualization.schemas.settings import (
+    AppSettings,
+    CacheSettings,
+    cache_settings,
+    settings,
+)
 
 __all__ = [
     # Lap data

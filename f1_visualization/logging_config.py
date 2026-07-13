@@ -4,8 +4,11 @@ import logging
 import logging.handlers
 import sys
 from pathlib import Path
+from typing import Literal
 
 from f1_visualization.schemas.settings import settings
+
+logger = logging.getLogger(__name__)
 
 
 def setup_logging(
@@ -56,7 +59,10 @@ def setup_logging(
         )
         file_handler.setLevel(getattr(logging, level))
         file_formatter = logging.Formatter(
-            fmt="%(asctime)s | %(levelname)-8s | %(name)s | %(funcName)s:%(lineno)d | %(message)s",
+            fmt=(
+                "%(asctime)s | %(levelname)-8s | %(name)s | "
+                "%(funcName)s:%(lineno)d | %(message)s"
+            ),
             datefmt="%Y-%m-%d %H:%M:%S",
         )
         file_handler.setFormatter(file_formatter)
@@ -67,7 +73,7 @@ def setup_logging(
     logging.getLogger("fastf1").setLevel(logging.INFO)
     logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
-    logging.info("Logging configured: level=%s, file=%s", level, log_to_file)
+    logger.info("Logging configured: level=%s, file=%s", level, log_to_file)
 
 
 def get_logger(name: str) -> logging.Logger:
@@ -86,7 +92,7 @@ def get_logger(name: str) -> logging.Logger:
 class LogContext:
     """Context manager for adding extra context to log messages."""
 
-    def __init__(self, logger: logging.Logger, **context: str | int | float):
+    def __init__(self, logger: logging.Logger, **context: str | int | float) -> None:
         """
         Initialize log context.
 
@@ -101,31 +107,32 @@ class LogContext:
         """Enter the context."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> bool:  # noqa: ANN001
+    def __exit__(self, exc_type, exc_val, exc_tb) -> Literal[False]:  # noqa: ANN001
         """Exit the context, logging any exception."""
         if exc_type is not None:
-            self.logger.exception(
+            self.logger.error(
                 "Error in context %s: %s",
                 self.context,
                 exc_val,
+                exc_info=(exc_type, exc_val, exc_tb),
             )
         return False
 
     def info(self, msg: str, *args: object) -> None:
         """Log info with context."""
-        self.logger.info(f"[{self.context}] {msg}", *args)
+        self.logger.info("[%s] %s", self.context, msg % args if args else msg)
 
     def debug(self, msg: str, *args: object) -> None:
         """Log debug with context."""
-        self.logger.debug(f"[{self.context}] {msg}", *args)
+        self.logger.debug("[%s] %s", self.context, msg % args if args else msg)
 
     def warning(self, msg: str, *args: object) -> None:
         """Log warning with context."""
-        self.logger.warning(f"[{self.context}] {msg}", *args)
+        self.logger.warning("[%s] %s", self.context, msg % args if args else msg)
 
     def error(self, msg: str, *args: object) -> None:
         """Log error with context."""
-        self.logger.error(f"[{self.context}] {msg}", *args)
+        self.logger.error("[%s] %s", self.context, msg % args if args else msg)
 
 
 # Initialize logging on import if not already configured
