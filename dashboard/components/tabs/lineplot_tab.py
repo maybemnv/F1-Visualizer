@@ -6,7 +6,6 @@ from dash import dcc, html
 from dashboard.components.tabs.common import lap_numbers_slider, upper_bound_slider
 from dashboard.components.tabs.scatterplot_tab import scatter_y_options
 
-
 line_y_options = [{"label": "Position", "value": "Position"}, *scatter_y_options]
 
 

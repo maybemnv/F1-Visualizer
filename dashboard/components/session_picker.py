@@ -3,7 +3,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc
 
-
 session_picker_row = dbc.Row(
     [
         dbc.Col(

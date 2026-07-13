@@ -1,10 +1,11 @@
 """Async data loading utilities for dashboard."""
 
 import logging
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable
+from typing import Any
 
 import pandas as pd
 
@@ -38,7 +39,7 @@ class AsyncDataLoader:
     polled by subsequent callbacks.
     """
 
-    def __init__(self, max_workers: int = 2):
+    def __init__(self, max_workers: int = 2) -> None:
         """
         Initialize async loader.
 
@@ -110,9 +111,7 @@ class AsyncDataLoader:
         Returns:
             LoadingResult with current state and data
         """
-        return self._results.get(
-            key, LoadingResult(state=LoadingState.IDLE)
-        )
+        return self._results.get(key, LoadingResult(state=LoadingState.IDLE))
 
     def is_loading(self, key: str) -> bool:
         """Check if loading operation is in progress."""
