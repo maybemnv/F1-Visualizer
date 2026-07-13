@@ -18,7 +18,7 @@ aws_login.sh
 # generated adhoc plots
 /*.png
 /*.svg
-/f1_visualization/adhoc_visuals.py
+/src/f1_visualization/adhoc_visuals.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -146,3 +146,4 @@ ipython_config.py
 uv.lock
 Data/grand_prix/
 Data/sprint/
+.ruff_cache/

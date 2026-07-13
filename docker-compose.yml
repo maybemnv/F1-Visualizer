@@ -18,6 +18,8 @@ services:
     environment:
       - F1_HOST=0.0.0.0
       - F1_PORT=8050
+      - F1_DATA_DIR=/app/Data
+      - F1_CACHE_DIR=/app/.cache
       - F1_LOG_LEVEL=INFO
       - F1_CACHE_ENABLED=true
       - F1_CACHE_DISK_TTL_HOURS=24

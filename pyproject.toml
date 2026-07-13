@@ -47,6 +47,7 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["f1_visualization*", "dashboard*"]
 
 [tool.pytest.ini_options]
@@ -63,7 +64,7 @@ ignore_missing_imports = true
 
 [tool.ruff]
 preview = true
-include = ["f1_visualization/**/*.py", "dashboard/**/*.py", "./*.py", "tests/**/*.py"]
+include = ["src/f1_visualization/**/*.py", "src/dashboard/**/*.py", "./*.py", "tests/**/*.py"]
 line-length = 96
 indent-width = 4
 

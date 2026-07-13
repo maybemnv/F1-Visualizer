@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python dependencies
 COPY pyproject.toml .
-COPY f1_visualization ./f1_visualization
-COPY dashboard ./dashboard
+COPY src ./src
 COPY app.py config.py ./
 RUN pip install --no-cache-dir build && \
     pip wheel --no-cache-dir --wheel-dir /wheels .
@@ -35,6 +34,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     F1_HOST=0.0.0.0 \
     F1_PORT=8050 \
+    F1_DATA_DIR=/app/Data \
+    F1_CACHE_DIR=/app/.cache \
     F1_LOG_LEVEL=INFO
 
 WORKDIR /app

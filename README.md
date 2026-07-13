@@ -12,6 +12,68 @@ An interactive dashboard and analysis toolkit for Formula 1 race data visualizat
 
 F1 Visualizer provides comprehensive tools for analyzing Formula 1 race data from the 2018 season onwards. The platform combines real-time visualization capabilities with machine learning models to deliver insights into driver performance, race strategies, and competitive dynamics.
 
+## System Architecture
+
+```mermaid
+flowchart TB
+    subgraph Entry["Entry Layer"]
+        APP["app.py<br/>Dash Bootstrap"]
+        CFG["config.py<br/>Pydantic Settings"]
+    end
+
+    subgraph UI["Dashboard Layer — src/dashboard/"]
+        LAY["layout.py<br/>Component Tree"]
+        GR["graphs.py<br/>Plotly Figures"]
+        UT["utils.py<br/>Helpers"]
+        CB["callbacks/<br/>6 Modules"]
+        CO["components/<br/>Tabs & Controls"]
+    end
+
+    subgraph CORE["Core Layer — src/f1_visualization/"]
+        DL["data_loader.py<br/>DF_DICT (CSV -> Dict)"]
+        PP["preprocess.py<br/>FastF1 Fetch & Transform"]
+        HP["helpers/<br/>Gap, SC, Filters"]
+        SS["session/<br/>FastF1 Session"]
+        ML["ml/<br/>KMeans, IsolationForest,<br/>GradientBoosting"]
+        SC["schemas/<br/>Pydantic Validation"]
+        CA["cache/<br/>LRU + Disk with TTL"]
+        CO2["consts.py<br/>Paths, Seasons, TOML"]
+    end
+
+    subgraph STORE["Data Stores"]
+        CSV["Data/<br/>transformed_*.csv"]
+        TOML["Data/<br/>*.toml Config"]
+        FAST["FastF1 API<br/>(external)"]
+    end
+
+    subgraph TEST["Tests — tests/"]
+        TD["dashboard/<br/>Tests"]
+        TF["f1_visualization/<br/>Tests"]
+    end
+
+    APP --> CFG
+    APP --> LAY
+    APP --> CB
+    CB --> DL
+    CB --> GR
+    CB --> ML
+    CB --> SS
+    GR --> HP
+    GR --> SC
+    DL --> CSV
+    CO2 --> TOML
+    PP --> FAST
+    PP --> CSV
+    SS --> FAST
+    CB --> CA
+
+    style Entry fill:#1a1a2e,color:#eee,stroke:#e94560
+    style UI fill:#16213e,color:#eee,stroke:#0f3460
+    style CORE fill:#1a1a2e,color:#eee,stroke:#533483
+    style STORE fill:#0f3460,color:#eee,stroke:#e94560
+    style TEST fill:#16213e,color:#eee,stroke:#533483
+```
+
 ### Key Features
 
 - **Interactive Dashboard**: Web-based interface for exploring race data with real-time filtering and visualization
@@ -89,29 +151,32 @@ F1-Visualizer/
 ├── Comments/                 # Design notes and documentation
 ├── Data/                     # Race and sprint session data
 ├── Docs/                     # Visual examples and references
-├── dashboard/
-│   ├── layout.py             # UI layout composition
-│   ├── graphs.py             # Plotly graph generators
-│   ├── constants.py          # Plot dimensions & magic numbers
-│   ├── utils.py              # UI helper utilities
-│   ├── async_loader.py       # Async data loading
-│   ├── callbacks/            # Dash callback handlers
-│   └── components/           # Reusable UI components
-├── f1_visualization/
-│   ├── preprocess.py         # Data transformation pipeline
-│   ├── data_loader.py        # CSV loading & dtype correction
-│   ├── visualization.py      # Re-exports for backward compat
-│   ├── annotations.py        # Shared type aliases (Session, Figure, Axes)
-│   ├── consts.py             # Seasons, sprint rounds, compound maps
-│   ├── exceptions.py         # Domain-specific exception classes
-│   ├── logging_config.py     # Centralized logging configuration
-│   ├── plots/                # Matplotlib plotting functions
-│   ├── ml/                   # Machine learning models
-│   ├── cache/                # Multi-level caching (memory + disk)
-│   ├── schemas/              # Pydantic validation models
-│   ├── session/              # Session info helpers
-│   └── helpers/              # Gap calculation, SC detection, etc.
+├── src/                      # Source packages
+│   ├── dashboard/
+│   │   ├── layout.py         # UI layout composition
+│   │   ├── graphs.py         # Plotly graph generators
+│   │   ├── constants.py      # Plot dimensions & magic numbers
+│   │   ├── utils.py          # UI helper utilities
+│   │   ├── async_loader.py   # Async data loading
+│   │   ├── callbacks/        # Dash callback handlers
+│   │   └── components/       # Reusable UI components
+│   └── f1_visualization/
+│       ├── preprocess.py     # Data transformation pipeline
+│       ├── data_loader.py    # CSV loading & dtype correction
+│       ├── visualization.py  # Re-exports for backward compat
+│       ├── annotations.py    # Shared type aliases (Session, Figure, Axes)
+│       ├── consts.py         # Seasons, sprint rounds, compound maps
+│       ├── exceptions.py     # Domain-specific exception classes
+│       ├── logging_config.py # Centralized logging configuration
+│       ├── plots/            # Matplotlib plotting functions
+│       ├── ml/               # Machine learning models
+│       ├── cache/            # Multi-level caching (memory + disk)
+│       ├── schemas/          # Pydantic validation models
+│       ├── session/          # Session info helpers
+│       └── helpers/          # Gap calculation, SC detection, etc.
 ├── tests/                    # Unit and integration tests
+│   ├── dashboard/            # Dashboard package tests
+│   └── f1_visualization/     # Core package tests
 ├── Dockerfile                # Container configuration
 └── docker-compose.yml        # Multi-container orchestration
 ```
