@@ -5,6 +5,17 @@ from dash import dcc
 from dashboard.constants import DEFAULT_UPPER_BOUND, UPPER_BOUND_MAX, UPPER_BOUND_MIN
 
 
+def responsive_graph(graph_id: str, style: dict | None = None) -> dcc.Graph:
+    """Create a responsive graph component."""
+    graph_style = {"width": "100%", **(style or {})}
+    return dcc.Graph(
+        id=graph_id,
+        config={"responsive": True},
+        responsive=True,
+        style=graph_style,
+    )
+
+
 def upper_bound_slider(slider_id: str, **kwargs) -> dcc.Slider:  # noqa: ANN003
     """Generate generic slider for setting upper bound."""
     return dcc.Slider(

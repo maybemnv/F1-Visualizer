@@ -29,6 +29,15 @@ class TestStrategyBarplot:
         # Should have at least one trace per driver
         assert len(fig.data) >= 2
 
+    def test_uses_responsive_layout(self, sample_laps_df):
+        """Generated figures should not force a fixed pixel width."""
+        from dashboard.graphs import strategy_barplot
+
+        fig = strategy_barplot(sample_laps_df, ["VER", "HAM"])
+
+        assert fig.layout.autosize is True
+        assert fig.layout.width is None
+
 
 class TestStatsScatterplot:
     """Tests for stats_scatterplot function."""

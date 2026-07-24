@@ -111,7 +111,8 @@ class DriverRankingModel:
 
         # Aggregate features per driver
         driver_stats = (
-            features_df.groupby("driver")
+            features_df
+            .groupby("driver")
             .agg({
                 "median_lap_time": "mean",
                 "lap_time_std": "mean",

@@ -29,6 +29,15 @@ def _plot_args() -> PlotArgs:
     )
 
 
+def _responsive_layout(height: int) -> dict:
+    """Return shared Plotly layout options for responsive dashboard graphs."""
+    return {
+        "autosize": True,
+        "height": height,
+        "margin": {"l": 60, "r": 30, "t": 70, "b": 60},
+    }
+
+
 def shade_sc_periods(fig: go.Figure, sc_laps: np.ndarray, vsc_laps: np.ndarray) -> go.Figure:
     """Shade SC and VSC periods."""
     sc_laps = np.append(sc_laps, [-1])
@@ -112,9 +121,7 @@ def strategy_barplot(
         },
         yaxis={"type": "category"},
         showlegend=False,
-        autosize=False,
-        width=1250,
-        height=max(300, 50 * len(drivers)),
+        **_responsive_layout(max(300, 50 * len(drivers))),
     )
     return fig
 
@@ -175,9 +182,7 @@ def stats_scatterplot(
     fig.update_layout(
         template="plotly_dark",
         showlegend=False,
-        autosize=False,
-        width=1250,
-        height=400 if num_row == 1 else (300 * num_row),
+        **_responsive_layout(400 if num_row == 1 else (300 * num_row)),
     )
     return fig
 
@@ -251,10 +256,8 @@ def stats_lineplot(
             "title": "Lap Number",
         },
         yaxis_title=y,
-        autosize=False,
-        width=1250,
-        height=max(50 * len(drivers), 500),
         legend_traceorder="reversed",
+        **_responsive_layout(max(50 * len(drivers), 500)),
     )
 
     if y == "Position":
@@ -301,9 +304,7 @@ def stats_distplot(
         xaxis_title="Driver",
         yaxis_title="Lap Time (s)",
         showlegend=False,
-        autosize=False,
-        width=1250,
-        height=500,
+        **_responsive_layout(500),
     )
     return fig
 
@@ -355,8 +356,6 @@ def compounds_lineplot(included_laps: pd.DataFrame, y: str, compounds: list[str]
         },
         yaxis_title=yaxis_title,
         showlegend=False,
-        autosize=False,
-        width=1250,
-        height=500,
+        **_responsive_layout(500),
     )
     return fig

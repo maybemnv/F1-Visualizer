@@ -13,14 +13,14 @@ Last updated: 2026-07-13.
 - [x] Fix Docker path resolution — `_resolve_project_root()` in `schemas/settings.py` walks up to `pyproject.toml` sentinel, works in both source tree and wheel-installed (Docker) deployments. Environment keys `F1_DATA_DIR` and `F1_CACHE_DIR` added to Dockerfile + docker-compose.yml for defense-in-depth on 2026-07-13.
 - [x] Fix `Automation/data-refresh.sh` ERR trap — pattern widened from `*preprocess.py*` to `*preprocess*` to cover both direct-file and `-m` invocation on 2026-07-13.
 - [ ] Stop mutating caller-owned DataFrames in `dashboard/utils.py`; use `.copy()` before transformations.
-- [ ] Replace import-time loading of all data with explicit, lazy loading and a clear missing-data error.
+- [x] Replace import-time loading of all data with explicit, lazy loading and a clear missing-data warning. `DF_DICT` now defers CSV reads until first mapping access and can be reloaded explicitly.
 - [x] Resolve the Python version mismatch between `pyproject.toml`, README, Docker, and CI. Project metadata and README now target Python 3.11+.
 
 ## 2. Automated Quality Gates
 
 - [x] Make `uv run pytest` pass with zero failures. Evidence: `49 passed` on 2026-07-13.
-- [ ] Add regression tests for boolean parsing, package imports, missing data, empty sessions, and gap calculations.
-- [x] Reduce `uv run ruff check .` from the current 401 violations to zero, or narrow the configured rules intentionally. Evidence: `All checks passed!` on 2026-07-13.
+- [ ] Add regression tests for boolean parsing, package imports, missing data, empty sessions, and gap calculations. Missing-data and lazy-loading regressions are covered.
+- [x] Reduce `uv run ruff check .` from the current 401 violations to zero, or narrow the configured rules intentionally. Evidence: `All checks passed!` on 2026-07-24.
 - [ ] Run `uv run mypy src/f1_visualization src/dashboard` and resolve or document remaining errors. (27 errors in 13 files remain — all pre-existing, none related to import resolution or path discovery.)
 - [ ] Add CI for tests, Ruff, mypy, and wheel-build validation on every pull request.
 - [ ] Run `pre-commit run --all-files` successfully.

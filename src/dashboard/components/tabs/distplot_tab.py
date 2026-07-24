@@ -3,7 +3,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from dashboard.components.tabs.common import upper_bound_slider
+from dashboard.components.tabs.common import responsive_graph, upper_bound_slider
 
 distplot_caveat = dbc.Alert(
     [
@@ -35,7 +35,7 @@ distplot_tab = dbc.Tab(
                 )
             ),
             html.Br(),
-            dbc.Row(dcc.Loading(dcc.Graph(id="distplot"))),
+            dbc.Row(dcc.Loading(responsive_graph("distplot"))),
             html.Br(),
             html.P("Filter out slow laps (default is 107% of the fastest lap):"),
             dbc.Row(upper_bound_slider(slider_id="upper-bound-dist")),

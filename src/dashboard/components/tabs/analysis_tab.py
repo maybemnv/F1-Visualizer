@@ -3,6 +3,8 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
+from dashboard.components.tabs.common import responsive_graph
+
 
 def create_analysis_tab() -> dbc.Tab:
     """Create the Analysis tab with ML visualizations."""
@@ -102,8 +104,8 @@ def create_analysis_tab() -> dbc.Tab:
                             dbc.Row(
                                 [
                                     dbc.Col(
-                                        dcc.Graph(
-                                            id="analysis-main-graph",
+                                        responsive_graph(
+                                            "analysis-main-graph",
                                             style={"height": "500px"},
                                         ),
                                         md=8,

@@ -3,6 +3,8 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
+from dashboard.components.tabs.common import responsive_graph
+
 compound_plot_explanation = dbc.Alert(
     [
         html.H4("Methodology", className="alert-heading"),
@@ -85,7 +87,7 @@ compound_plot_tab = dbc.Tab(
                 )
             ),
             html.Br(),
-            dbc.Row(dcc.Loading(dcc.Graph(id="compound-plot"))),
+            dbc.Row(dcc.Loading(responsive_graph("compound-plot"))),
         ])
     ),
     label="Compound Performance Plot",

@@ -3,7 +3,11 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from dashboard.components.tabs.common import lap_numbers_slider, upper_bound_slider
+from dashboard.components.tabs.common import (
+    lap_numbers_slider,
+    responsive_graph,
+    upper_bound_slider,
+)
 
 scatter_y_options = [
     {"label": "Lap Time", "value": "LapTime"},
@@ -30,7 +34,7 @@ scatterplot_tab = dbc.Tab(
                 )
             ),
             html.Br(),
-            dbc.Row(dcc.Loading(dcc.Graph(id="scatterplot"))),
+            dbc.Row(dcc.Loading(responsive_graph("scatterplot"))),
             html.Br(),
             html.P("Filter out slow laps (default is 107% of the fastest lap):"),
             dbc.Row(upper_bound_slider(slider_id="upper-bound-scatter")),

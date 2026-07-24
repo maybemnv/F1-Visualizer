@@ -3,7 +3,11 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from dashboard.components.tabs.common import lap_numbers_slider, upper_bound_slider
+from dashboard.components.tabs.common import (
+    lap_numbers_slider,
+    responsive_graph,
+    upper_bound_slider,
+)
 from dashboard.components.tabs.scatterplot_tab import scatter_y_options
 
 line_y_options = [{"label": "Position", "value": "Position"}, *scatter_y_options]
@@ -43,7 +47,7 @@ lineplot_tab = dbc.Tab(
                 ],
             ),
             html.Br(),
-            dbc.Row(dcc.Loading(dcc.Graph(id="lineplot"))),
+            dbc.Row(dcc.Loading(responsive_graph("lineplot"))),
             html.Br(),
             html.P("Filter out slow laps (default is 107% of the fastest lap):"),
             dbc.Row(upper_bound_slider(slider_id="upper-bound-line")),

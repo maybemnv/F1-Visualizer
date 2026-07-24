@@ -69,6 +69,23 @@ class CacheManager:
         ext = ".parquet" if self._disk_format == "parquet" else ".pkl"
         return self._cache_dir / f"{key}{ext}"
 
+    def _read_disk_cache(self, path: Path) -> pd.DataFrame:
+        """Read a DataFrame from the configured disk cache format."""
+        if self._disk_format == "parquet":
+            return pd.read_parquet(path)
+
+        with open(path, "rb") as f:
+            return pickle.load(f)
+
+    def _write_disk_cache(self, path: Path, data: pd.DataFrame) -> None:
+        """Write a DataFrame to the configured disk cache format."""
+        if self._disk_format == "parquet":
+            data.to_parquet(path, index=False)
+            return
+
+        with open(path, "wb") as f:
+            pickle.dump(data, f)
+
     def _is_disk_cache_valid(self, path: Path) -> bool:
         """Check if disk cache file exists and is not expired."""
         if not path.exists():
@@ -108,11 +125,7 @@ class CacheManager:
         disk_path = self._get_disk_path(key)
         if self._is_disk_cache_valid(disk_path):
             try:
-                if self._disk_format == "parquet":
-                    data = pd.read_parquet(disk_path)
-                else:
-                    with open(disk_path, "rb") as f:
-                        data = pickle.load(f)
+                data = self._read_disk_cache(disk_path)
 
                 # Promote to memory cache
                 self._set_memory(key, data)
@@ -153,11 +166,7 @@ class CacheManager:
         if disk:
             disk_path = self._get_disk_path(key)
             try:
-                if self._disk_format == "parquet":
-                    data.to_parquet(disk_path, index=False)
-                else:
-                    with open(disk_path, "wb") as f:
-                        pickle.dump(data, f)
+                self._write_disk_cache(disk_path, data)
                 logger.debug("Set disk cache: %s", key)
             except (OSError, pickle.PickleError) as e:
                 logger.warning("Failed to write disk cache %s: %s", key, e)

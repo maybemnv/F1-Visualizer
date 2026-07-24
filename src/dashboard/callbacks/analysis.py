@@ -100,7 +100,8 @@ def _run_clustering_analysis(
 
     # Aggregate per driver
     driver_features = (
-        features_df.groupby("driver")
+        features_df
+        .groupby("driver")
         .agg({
             "median_lap_time": "mean",
             "lap_time_std": "mean",
